@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Damian Suchodolski | Freelancer PLC • Roboty przemysłowe • Vision • VIBN</title>
+<title>DS Automation Engineering | Damian Suchodolski — PLC • Roboty przemysłowe • Vision • VIBN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -979,7 +979,7 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo pixel-font">DAMIAN<span>.SUCHODOLSKI</span></div>
+  <div class="nav-logo pixel-font">DS<span>.AUTOMATION</span></div>
   <div class="nav-links">
     <a href="#hero" data-i18n="nav_start">START</a>
     <a href="#skills" data-i18n="nav_skills">SKILLS</a>
@@ -999,7 +999,7 @@ footer{
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-text fade-in">
-      <div class="hero-tag" data-i18n="hero_tag">// FREELANCER_AUTOMATYK</div>
+      <div class="hero-tag" data-i18n="hero_tag">// DS_AUTOMATION_ENGINEERING</div>
       <h1 class="hero-name">
         <span style="font-size:.7em;color:#888;" data-i18n="hero_hello">CZEŚĆ, JESTEM</span>
         <span class="accent glitch" data-text="DAMIAN">DAMIAN</span>
@@ -1450,15 +1450,15 @@ footer{
       <form class="contact-form fade-in" style="transition-delay:.2s" onsubmit="handleSubmit(event)">
         <div class="form-group">
           <label class="form-label" data-i18n="form_name">TWOJE IMIĘ</label>
-          <input class="form-input" type="text" placeholder="Jan Kowalski" data-i18n-ph="form_name_ph" required>
+          <input class="form-input" type="text" name="name" placeholder="Jan Kowalski" data-i18n-ph="form_name_ph" required>
         </div>
         <div class="form-group">
           <label class="form-label">EMAIL</label>
-          <input class="form-input" type="email" placeholder="jan@firma.pl" data-i18n-ph="form_email_ph" required>
+          <input class="form-input" type="email" name="email" placeholder="jan@firma.pl" data-i18n-ph="form_email_ph" required>
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="form_type">TYP PROJEKTU</label>
-          <select class="form-input" style="cursor:pointer;" data-i18n="form_options">
+          <select class="form-input" name="type" style="cursor:pointer;" data-i18n="form_options">
             <option value="" style="background:#111;">-- wybierz --</option>
             <option value="plc" style="background:#111;">Programowanie PLC</option>
             <option value="robot" style="background:#111;">Integracja robota</option>
@@ -1469,7 +1469,7 @@ footer{
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="form_desc">OPIS PROJEKTU</label>
-          <textarea class="form-textarea" placeholder="Krótko opisz swój projekt lub problem..." data-i18n-ph="form_desc_ph"></textarea>
+          <textarea class="form-textarea" name="message" placeholder="Krótko opisz swój projekt lub problem..." data-i18n-ph="form_desc_ph"></textarea>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;" data-i18n="form_submit">
           ► WYŚLIJ ZAPYTANIE
@@ -1482,9 +1482,9 @@ footer{
 
 <!-- FOOTER -->
 <footer>
-  <span class="footer-logo">DAMIAN SUCHODOLSKI</span>
-  <p class="footer-copy" data-i18n="footer_copy">© 2026 Damian Suchodolski — Freelancer PLC · Roboty przemysłowe · Vision · VIBN<br>
-  Zrobiony z <span>♥</span> i dużą ilością kawy ☕ | Pixel Art Edition</p>
+  <span class="footer-logo">DS AUTOMATION ENGINEERING</span>
+  <p class="footer-copy" data-i18n="footer_copy">© 2026 DS Automation Engineering — Damian Suchodolski<br>
+  PLC · Roboty przemysłowe · Vision · VIBN | Zrobiony z <span>♥</span> i dużą ilością kawy ☕</p>
 </footer>
 
 <script>
@@ -1947,18 +1947,38 @@ function fixAboutGrid() {
 }
 
 // ===== FORM =====
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
+  const form = e.target;
   const msg = document.getElementById('form-msg');
-  const btn = e.target.querySelector('button');
+  const btn = form.querySelector('button');
   btn.textContent = t('form_sending');
   btn.disabled = true;
 
-  setTimeout(() => {
+  const data = {
+    name: form.querySelector('[name=name]').value,
+    email: form.querySelector('[name=email]').value,
+    project_type: form.querySelector('[name=type]').value,
+    message: form.querySelector('[name=message]').value,
+    _subject: 'DS Automation — zapytanie ze strony: ' + form.querySelector('[name=name]').value,
+    _template: 'table'
+  };
+
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/damiansuchodolski88@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     msg.textContent = t('form_sent');
     btn.textContent = t('form_sent_btn');
     btn.style.background = '#005533';
-  }, 1500);
+  } catch (err) {
+    msg.textContent = t('form_error');
+    btn.textContent = t('form_submit');
+    btn.disabled = false;
+  }
 }
 
 // ===== INIT ALL =====
@@ -1993,13 +2013,14 @@ const I18N = {
     form_sending: '... WYSYŁANIE',
     form_sent: '✓ WIADOMOŚĆ WYSŁANA! Odezwę się wkrótce.',
     form_sent_btn: '✓ WYSŁANO',
+    form_error: '✗ BŁĄD WYSYŁKI — napisz na: damiansuchodolski88@gmail.com',
     loader_msgs: loaderMsgs.slice()
   },
   en: {
     loader_text: `SYSTEM INITIALIZATION...`,
     loader_msgs: ['Initializing PLC...','Calibrating camera...','Loading algorithms...','Starting robots...','Compiling program...','Establishing connection...','System ready!'],
     nav_start: `START`, nav_skills: `SKILLS`, nav_services: `SERVICES`, nav_about: `ABOUT`, nav_projects: `PROJECTS`, nav_contact: `CONTACT`,
-    hero_tag: `// FREELANCE_AUTOMATION_ENGINEER`,
+    hero_tag: `// DS_AUTOMATION_ENGINEERING`,
     hero_hello: `HI, I'M`,
     hero_desc: `13+ years in industrial automation.<br>I program <span class="hi">KUKA / ABB / Fanuc robots</span>, <span class="hi">Siemens S7-1500</span> PLCs<br>and <span class="hi">Keyence</span> vision systems.<br><br>VIBN • commissioning • optimization • safety.<br>Currently: Mercedes VAN EA project, Vitoria (ES).`,
     hero_btn1: `► HIRE ME`, hero_btn2: `◉ SERVICES`,
@@ -2063,13 +2084,14 @@ const I18N = {
     form_sending: `... SENDING`,
     form_sent: `✓ MESSAGE SENT! I will get back to you soon.`,
     form_sent_btn: `✓ SENT`,
-    footer_copy: `© 2026 Damian Suchodolski — Freelance PLC · Industrial Robots · Vision · VIBN<br>Made with <span>♥</span> and lots of coffee ☕ | Pixel Art Edition`
+    form_error: `✗ SENDING FAILED — email me directly: damiansuchodolski88@gmail.com`,
+    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · Industrial Robots · Vision · VIBN | Made with <span>♥</span> and lots of coffee ☕`
   },
   de: {
     loader_text: `SYSTEMINITIALISIERUNG...`,
     loader_msgs: ['SPS wird initialisiert...','Kamera wird kalibriert...','Algorithmen werden geladen...','Roboter werden gestartet...','Programm wird kompiliert...','Verbindung wird aufgebaut...','System bereit!'],
     nav_start: `START`, nav_skills: `SKILLS`, nav_services: `LEISTUNGEN`, nav_about: `ÜBER MICH`, nav_projects: `PROJEKTE`, nav_contact: `KONTAKT`,
-    hero_tag: `// FREELANCE_AUTOMATISIERER`,
+    hero_tag: `// DS_AUTOMATION_ENGINEERING`,
     hero_hello: `HALLO, ICH BIN`,
     hero_desc: `13+ Jahre Industrieautomatisierung.<br>Ich programmiere <span class="hi">KUKA / ABB / Fanuc Roboter</span>, <span class="hi">Siemens S7-1500</span> SPS<br>und <span class="hi">Keyence</span> Bildverarbeitungssysteme.<br><br>VIBN • Inbetriebnahme • Optimierung • Safety.<br>Aktuell: Projekt Mercedes VAN EA, Vitoria (ES).`,
     hero_btn1: `► PROJEKT ANFRAGEN`, hero_btn2: `◉ LEISTUNGEN`,
@@ -2133,7 +2155,8 @@ const I18N = {
     form_sending: `... WIRD GESENDET`,
     form_sent: `✓ NACHRICHT GESENDET! Ich melde mich bald.`,
     form_sent_btn: `✓ GESENDET`,
-    footer_copy: `© 2026 Damian Suchodolski — Freelance SPS · Industrieroboter · Bildverarbeitung · VIBN<br>Gemacht mit <span>♥</span> und viel Kaffee ☕ | Pixel Art Edition`
+    form_error: `✗ SENDEN FEHLGESCHLAGEN — schreiben Sie direkt an: damiansuchodolski88@gmail.com`,
+    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>SPS · Industrieroboter · Bildverarbeitung · VIBN | Gemacht mit <span>♥</span> und viel Kaffee ☕`
   }
 };
 
