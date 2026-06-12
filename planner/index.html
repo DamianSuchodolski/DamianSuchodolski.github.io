@@ -140,6 +140,17 @@ main{flex:1; min-height:0; display:flex; flex-direction:column}
 .badge.over{background:rgba(255,93,108,.15); color:var(--danger)}
 .todo-item .act{color:var(--muted); font-size:17px; padding:4px 6px; flex:0 0 auto}
 
+/* ---------- auth ---------- */
+.auth-back{position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px}
+.auth-box{width:100%; max-width:340px; text-align:center}
+.auth-box .biglogo{width:54px; height:54px; border-radius:14px; background:linear-gradient(135deg,#4f8cff,#7c6ff0); margin:0 auto 14px}
+.auth-box h2{margin:0 0 4px; font-size:22px}
+.auth-box .sub{color:var(--muted); font-size:13px; margin:0 0 22px}
+.auth-box input{width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid var(--border); background:var(--panel2); color:var(--text)}
+.auth-box input::placeholder{color:var(--muted)}
+.auth-err{color:var(--danger); font-size:13px; margin-top:12px; min-height:18px}
+#syncStatus{font-size:11px; color:var(--muted); white-space:nowrap}
+
 /* ---------- modal ---------- */
 .modal-back{
   position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:50;
@@ -198,6 +209,7 @@ main{flex:1; min-height:0; display:flex; flex-direction:column}
 
 <header>
   <h1><span class="logo"></span><span>Planer</span></h1>
+  <span id="syncStatus"></span>
   <div class="tabs" id="tabs">
     <button data-tab="cal" class="active">Kalendarz</button>
     <button data-tab="todo">Lista</button>
@@ -259,7 +271,12 @@ main{flex:1; min-height:0; display:flex; flex-direction:column}
         <button class="btn ghost" id="importBtn">⬆ Import JSON</button>
         <input type="file" id="importFile" accept=".json" hidden>
       </div>
-      <p style="color:var(--muted);font-size:12.5px">Dane zapisują się automatycznie w tej przeglądarce (localStorage). Zrób eksport, jeśli chcesz przenieść je na inne urządzenie.</p>
+      <p style="color:var(--muted);font-size:12.5px" id="dataInfo">Dane zapisują się automatycznie w tej przeglądarce (localStorage). Zrób eksport, jeśli chcesz przenieść je na inne urządzenie.</p>
+      <div id="accountSec" hidden>
+        <div class="section-t">Konto</div>
+        <p style="color:var(--muted);font-size:12.5px" id="accountInfo"></p>
+        <div class="btnrow"><button class="btn ghost" id="logoutBtn">Wyloguj</button></div>
+      </div>
     </div>
   </div>
 </main>
@@ -272,6 +289,19 @@ main{flex:1; min-height:0; display:flex; flex-direction:column}
 </nav>
 
 <button class="fab" id="fab">+</button>
+
+<!-- EKRAN LOGOWANIA -->
+<div class="auth-back" id="authBack" hidden>
+  <div class="auth-box">
+    <div class="biglogo"></div>
+    <h2>Planer</h2>
+    <p class="sub">Zaloguj się, aby kontynuować</p>
+    <input type="email" id="authEmail" placeholder="E-mail" autocomplete="username">
+    <input type="password" id="authPass" placeholder="Hasło" autocomplete="current-password">
+    <button class="btn" id="authBtn" style="width:100%">Zaloguj</button>
+    <div class="auth-err" id="authErr"></div>
+  </div>
+</div>
 
 <!-- MODAL: blok -->
 <div class="modal-back" id="blockModal">
@@ -345,6 +375,8 @@ main{flex:1; min-height:0; display:flex; flex-direction:column}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script>
 "use strict";
 /* ================= dane ================= */
@@ -356,17 +388,19 @@ const DEFAULT_CATS = [
 const SWATCHES = ["#7c6ff0","#2dd4a8","#4f8cff","#ff5d6c","#ffb74f","#f06ec2","#5fd0f0","#a3e05a","#c98bff","#ff8a5f","#8b91a7","#e8d44f"];
 
 let state = load();
-function load(){
-  try{
-    const s = JSON.parse(localStorage.getItem(LS_KEY));
-    if(s && Array.isArray(s.cats) && Array.isArray(s.blocks)){
-      if(!Array.isArray(s.todos)) s.todos = [];
-      return s;
-    }
-  }catch(e){}
-  return { cats: structuredClone(DEFAULT_CATS), blocks: [], todos: [], lastCat:"work" };
+function normalize(s){
+  if(!s || !Array.isArray(s.cats) || !Array.isArray(s.blocks))
+    return { cats: structuredClone(DEFAULT_CATS), blocks: [], todos: [], lastCat:"work" };
+  if(!Array.isArray(s.todos)) s.todos = [];
+  return s;
 }
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function load(){
+  try{ return normalize(JSON.parse(localStorage.getItem(LS_KEY))); }catch(e){ return normalize(null); }
+}
+function save(localOnly){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+  if(!localOnly) scheduleSync();
+}
 const uid = () => Math.random().toString(36).slice(2,10);
 const catById = id => state.cats.find(c=>c.id===id) || {name:"?", color:"#8b91a7"};
 
@@ -878,7 +912,7 @@ document.getElementById("importFile").onchange=e=>{
     try{
       const s=JSON.parse(r.result);
       if(!Array.isArray(s.cats)||!Array.isArray(s.blocks)) throw 0;
-      if(confirm("Zastąpić obecne dane danymi z pliku?")){ state=s; save(); render(); }
+      if(confirm("Zastąpić obecne dane danymi z pliku?")){ state=normalize(s); save(); render(); }
     }catch(err){ alert("Nieprawidłowy plik."); }
   };
   r.readAsText(f);
@@ -892,12 +926,101 @@ function render(){
   else if(activeTab==="stats") renderStats();
   else renderCats();
 }
-render();
-// przewiń do godziny 7:00 na start
-document.getElementById("calScroll").scrollTop = 7*hourPx()-10;
+
+/* ================= konto i synchronizacja (Supabase) ================= */
+const CFG = window.PLANNER_CONFIG || {};
+const HAS_BACKEND = !!(CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase);
+const sb = HAS_BACKEND ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey) : null;
+let user = null, syncTimer = null, appStarted = false;
+
+function setSync(t){ document.getElementById("syncStatus").textContent = t; }
+function scheduleSync(){
+  if(!user) return;
+  setSync("☁ …");
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushRemote, 1200);
+}
+async function pushRemote(){
+  if(!user) return;
+  clearTimeout(syncTimer); syncTimer = null;
+  try{
+    const {error} = await sb.from("planner_data")
+      .upsert({ user_id:user.id, data:state, updated_at:new Date().toISOString() });
+    setSync(error ? "⚠ offline" : "☁ zapisano");
+  }catch(e){ setSync("⚠ offline"); }
+}
+async function pullRemote(){
+  try{
+    const {data, error} = await sb.from("planner_data").select("data").eq("user_id", user.id).maybeSingle();
+    if(error){ setSync("⚠ offline"); return; }
+    if(data && data.data){
+      state = normalize(data.data);
+      save(true);
+      setSync("☁ zapisano");
+      if(appStarted) render();
+    }else{
+      await pushRemote(); // pierwsze logowanie: wyślij dane lokalne na serwer
+    }
+  }catch(e){ setSync("⚠ offline"); }
+}
+
+function startApp(){
+  appStarted = true;
+  render();
+  document.getElementById("calScroll").scrollTop = 7*hourPx()-10;
+}
+async function enter(u){
+  user = u;
+  document.getElementById("authBack").hidden = true;
+  document.getElementById("accountSec").hidden = false;
+  document.getElementById("accountInfo").textContent = "Zalogowano jako " + (u.email||"");
+  document.getElementById("dataInfo").textContent = "Dane zapisują się automatycznie na serwerze (Supabase) i synchronizują między urządzeniami. Eksport JSON służy jako dodatkowa kopia zapasowa.";
+  await pullRemote();
+  startApp();
+}
+async function doLogin(){
+  const email = document.getElementById("authEmail").value.trim();
+  const pass = document.getElementById("authPass").value;
+  const err = document.getElementById("authErr");
+  const btn = document.getElementById("authBtn");
+  if(!email || !pass){ err.textContent = "Podaj e-mail i hasło."; return; }
+  err.textContent = ""; btn.disabled = true; btn.textContent = "Logowanie…";
+  try{
+    const {data, error} = await sb.auth.signInWithPassword({ email, password: pass });
+    if(error){ err.textContent = /fetch|network/i.test(error.message||"") ? "Brak połączenia z serwerem." : "Nieprawidłowy e-mail lub hasło."; }
+    else enter(data.user);
+  }catch(e){ err.textContent = "Brak połączenia z serwerem."; }
+  btn.disabled = false; btn.textContent = "Zaloguj";
+}
+document.getElementById("authBtn").onclick = doLogin;
+document.getElementById("authPass").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+document.getElementById("logoutBtn").onclick = async ()=>{
+  if(!confirm("Wylogować? Lokalna kopia danych zostanie usunięta z tego urządzenia.")) return;
+  await pushRemote();
+  try{ await sb.auth.signOut(); }catch(e){}
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+};
+// po powrocie do karty/appki pobierz świeże dane (o ile nic nie czeka na wysyłkę)
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState==="visible" && user && !syncTimer) pullRemote();
+});
+window.addEventListener("online", ()=>{ if(user) pushRemote(); });
+
+async function boot(){
+  if(!HAS_BACKEND){ setSync("💾 lokalnie"); startApp(); return; }
+  try{
+    const {data:{session}} = await sb.auth.getSession();
+    if(session) await enter(session.user);
+    else document.getElementById("authBack").hidden = false;
+  }catch(e){
+    setSync("⚠ offline"); startApp();
+  }
+}
+boot();
 // odśwież linię "teraz" co minutę
-setInterval(()=>{ if(activeTab==="cal") renderCalendar(); }, 60000);
-window.addEventListener("resize", ()=>{ if(activeTab==="cal") renderCalendar(); });
+setInterval(()=>{ if(appStarted && activeTab==="cal") renderCalendar(); }, 60000);
+window.addEventListener("resize", ()=>{ if(appStarted && activeTab==="cal") renderCalendar(); });
 </script>
 </body>
 </html>
