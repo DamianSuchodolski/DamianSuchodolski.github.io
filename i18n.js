@@ -6,7 +6,7 @@ const I18N = {
     form_sending: '... WYSYŁANIE',
     form_sent: '✓ WIADOMOŚĆ WYSŁANA! Odezwę się wkrótce.',
     form_sent_btn: '✓ WYSŁANO',
-    form_error: '✗ BŁĄD WYSYŁKI — napisz na: damiansuchodolski88@gmail.com',
+    form_error: '✗ BŁĄD WYSYŁKI — spróbuj ponownie za chwilę',
     loader_msgs: (typeof loaderMsgs !== 'undefined') ? loaderMsgs.slice() : []
   },
   en: {
@@ -88,7 +88,7 @@ const I18N = {
     form_sending: `... SENDING`,
     form_sent: `✓ MESSAGE SENT! I will get back to you soon.`,
     form_sent_btn: `✓ SENT`,
-    form_error: `✗ SENDING FAILED — email me directly: damiansuchodolski88@gmail.com`,
+    form_error: `✗ SENDING FAILED — please try again in a moment`,
     footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · Industrial Robots · Vision · VIBN | Made with <span>♥</span> and lots of coffee ☕`
   },
   de: {
@@ -170,7 +170,7 @@ const I18N = {
     form_sending: `... WIRD GESENDET`,
     form_sent: `✓ NACHRICHT GESENDET! Ich melde mich bald.`,
     form_sent_btn: `✓ GESENDET`,
-    form_error: `✗ SENDEN FEHLGESCHLAGEN — schreiben Sie direkt an: damiansuchodolski88@gmail.com`,
+    form_error: `✗ SENDEN FEHLGESCHLAGEN — bitte versuchen Sie es gleich erneut`,
     footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>SPS · Industrieroboter · Bildverarbeitung · VIBN | Gemacht mit <span>♥</span> und viel Kaffee ☕`
   },
   zh: {
@@ -252,7 +252,7 @@ const I18N = {
     form_sending: `... 发送中`,
     form_sent: `✓ 消息已发送！我会尽快回复。`,
     form_sent_btn: `✓ 已发送`,
-    form_error: `✗ 发送失败 — 请直接发邮件：damiansuchodolski88@gmail.com`,
+    form_error: `✗ 发送失败 — 请稍后重试`,
     footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · 工业机器人 · 视觉 · VIBN | 用<span>♥</span>和大量咖啡制作 ☕`
   }
 };
