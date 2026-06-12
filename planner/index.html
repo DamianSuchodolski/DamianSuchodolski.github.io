@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Planer Blokowy</title>
+<style>
+:root{
+  --bg:#0f1117; --panel:#171a23; --panel2:#1e2230; --border:#2a2f40;
+  --text:#e8eaf2; --muted:#8b91a7; --accent:#4f8cff; --danger:#ff5d6c;
+  --hour-px:56px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; height:100%}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  display:flex; flex-direction:column; height:100dvh; overflow:hidden;
+}
+button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
+input,select{font:inherit}
+
+/* ---------- header ---------- */
+header{
+  flex:0 0 auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:10px 14px; border-bottom:1px solid var(--border); background:var(--panel);
+}
+header h1{font-size:17px; margin:0; display:flex; align-items:center; gap:8px}
+header h1 .logo{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#4f8cff,#7c6ff0);display:inline-block}
+.tabs{display:flex; gap:4px; background:var(--panel2); border-radius:10px; padding:3px}
+.tabs button{padding:6px 14px; border-radius:8px; color:var(--muted); font-size:14px}
+.tabs button.active{background:var(--accent); color:#fff}
+.spacer{flex:1}
+.weeknav{display:flex; align-items:center; gap:6px}
+.weeknav button{padding:6px 10px; border-radius:8px; background:var(--panel2)}
+.weeknav .label{font-size:14px; color:var(--muted); min-width:130px; text-align:center}
+.viewmode{display:flex; gap:4px; background:var(--panel2); border-radius:10px; padding:3px}
+.viewmode button{padding:5px 10px; border-radius:8px; color:var(--muted); font-size:13px}
+.viewmode button.active{background:#323950; color:var(--text)}
+
+/* ---------- calendar ---------- */
+main{flex:1; min-height:0; display:flex; flex-direction:column}
+.view{flex:1; min-height:0; display:none; flex-direction:column}
+.view.active{display:flex}
+.cal-head{
+  display:grid; grid-template-columns:46px repeat(var(--days,7),1fr);
+  border-bottom:1px solid var(--border); background:var(--panel); flex:0 0 auto;
+  padding-right:var(--sbw,0px);
+}
+.cal-head .dh{padding:8px 4px; text-align:center; font-size:12px; color:var(--muted); border-left:1px solid var(--border); cursor:pointer}
+.cal-head .dh b{display:block; font-size:15px; color:var(--text); font-weight:600}
+.cal-head .dh.today b{color:var(--accent)}
+.cal-head .dh.today{background:rgba(79,140,255,.08)}
+.cal-scroll{flex:1; overflow-y:auto; overflow-x:hidden}
+.cal-grid{display:grid; grid-template-columns:46px repeat(var(--days,7),1fr); height:calc(24*var(--hour-px))}
+.time-col{position:relative; font-size:11px; color:var(--muted)}
+.time-col div{position:absolute; right:6px; transform:translateY(-50%)}
+.day-col{
+  position:relative; border-left:1px solid var(--border);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--hour-px) - 1px), var(--border) calc(var(--hour-px) - 1px), var(--border) var(--hour-px));
+}
+.day-col.today{background-color:rgba(79,140,255,.05)}
+.blk{
+  position:absolute; border-radius:6px; padding:3px 6px; font-size:11px; overflow:hidden;
+  border-left:3px solid; cursor:pointer; line-height:1.25; user-select:none;
+}
+.blk b{font-size:11.5px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.blk .t{opacity:.75}
+.blk.tiny{padding:1px 6px}
+.blk.tiny .t{display:none}
+.now-line{position:absolute; left:0; right:0; height:2px; background:var(--danger); z-index:5; pointer-events:none}
+.now-line::before{content:""; position:absolute; left:-4px; top:-3px; width:8px; height:8px; border-radius:50%; background:var(--danger)}
+.drag-ghost{position:absolute; left:2%; width:96%; background:rgba(79,140,255,.3); border:1px dashed var(--accent); border-radius:6px; pointer-events:none; z-index:4}
+.hint{
+  position:absolute; top:14px; left:50%; transform:translateX(-50%); z-index:6;
+  background:var(--panel2); border:1px solid var(--border); color:var(--muted);
+  padding:8px 14px; border-radius:10px; font-size:13px; white-space:nowrap;
+}
+
+/* ---------- fab ---------- */
+.fab{
+  position:fixed; right:18px; bottom:calc(18px + env(safe-area-inset-bottom)); z-index:20;
+  width:54px; height:54px; border-radius:50%; background:var(--accent); color:#fff;
+  font-size:28px; line-height:1; box-shadow:0 6px 18px rgba(79,140,255,.4);
+}
+
+/* ---------- stats ---------- */
+.stats-wrap{flex:1; overflow-y:auto; padding:16px; max-width:760px; width:100%; margin:0 auto}
+.period-bar{display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap}
+.chip{padding:6px 14px; border-radius:999px; background:var(--panel2); color:var(--muted); font-size:13px}
+.chip.active{background:var(--accent); color:#fff}
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:18px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px 14px}
+.card .v{font-size:21px; font-weight:700; margin-top:2px}
+.card .l{font-size:12px; color:var(--muted)}
+.section-t{font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin:18px 0 10px}
+.daybars{display:flex; gap:6px; align-items:flex-end; height:150px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px}
+.daybar{flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; min-width:0}
+.daybar .stack{display:flex; flex-direction:column-reverse; border-radius:4px; overflow:hidden}
+.daybar .seg{width:100%}
+.daybar .dl{text-align:center; font-size:10px; color:var(--muted); margin-top:5px; white-space:nowrap; overflow:hidden}
+.catrow{display:flex; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:8px}
+.catrow .dot{width:14px; height:14px; border-radius:4px; flex:0 0 auto}
+.catrow .nm{flex:1; min-width:0}
+.catrow .nm small{display:block; color:var(--muted); font-size:11px}
+.catrow .hrs{font-weight:700; font-size:15px; white-space:nowrap}
+.catrow .bar{flex:0 0 90px; height:6px; background:var(--panel2); border-radius:3px; overflow:hidden}
+.catrow .bar i{display:block; height:100%; border-radius:3px}
+.empty{color:var(--muted); text-align:center; padding:30px 10px; font-size:14px}
+
+/* ---------- tasks/settings ---------- */
+.cats-wrap{flex:1; overflow-y:auto; padding:16px; max-width:680px; width:100%; margin:0 auto}
+.catitem{display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px; cursor:pointer}
+.catitem .dot{width:18px; height:18px; border-radius:6px}
+.catitem .nm{flex:1; font-size:15px}
+.catitem .nm small{display:block; color:var(--muted); font-size:11.5px; margin-top:1px}
+.catitem .arr{color:var(--muted)}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 18px; border-radius:10px; background:var(--accent); color:#fff; font-size:14px; font-weight:600}
+.btn.ghost{background:var(--panel2); color:var(--text)}
+.btn.danger{background:transparent; color:var(--danger)}
+.btnrow{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap}
+
+/* ---------- todo ---------- */
+.todo-wrap{flex:1; overflow-y:auto; padding:16px; max-width:680px; width:100%; margin:0 auto}
+.todo-add{display:flex; gap:8px; margin-bottom:16px}
+.todo-add input{flex:1; min-width:0; padding:11px 12px; border-radius:10px; border:1px solid var(--border); background:var(--panel2); color:var(--text)}
+.todo-add input::placeholder{color:var(--muted)}
+.todo-item{display:flex; align-items:center; gap:11px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-bottom:8px}
+.todo-item .chk{width:22px; height:22px; border-radius:50%; border:2px solid var(--muted); flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; cursor:pointer}
+.todo-item.done .chk{background:var(--accent); border-color:var(--accent)}
+.todo-item .tx{flex:1; min-width:0; font-size:14.5px; cursor:pointer; overflow-wrap:break-word}
+.todo-item.done .tx{color:var(--muted); text-decoration:line-through}
+.todo-item .meta{display:flex; gap:6px; margin-top:4px; flex-wrap:wrap; align-items:center}
+.badge{font-size:11px; padding:2px 8px; border-radius:999px; background:var(--panel2); color:var(--muted); display:inline-flex; align-items:center; gap:5px}
+.badge .dot{width:8px; height:8px; border-radius:50%}
+.badge.over{background:rgba(255,93,108,.15); color:var(--danger)}
+.todo-item .act{color:var(--muted); font-size:17px; padding:4px 6px; flex:0 0 auto}
+
+/* ---------- modal ---------- */
+.modal-back{
+  position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:50;
+  display:none; align-items:flex-end; justify-content:center;
+}
+.modal-back.open{display:flex}
+.modal{
+  background:var(--panel); border:1px solid var(--border); border-radius:16px 16px 0 0;
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom)); width:100%; max-width:480px;
+  max-height:88dvh; overflow-y:auto;
+}
+@media(min-width:600px){ .modal-back{align-items:center} .modal{border-radius:16px} }
+.modal h3{margin:0 0 14px; font-size:17px}
+.modal label{display:block; font-size:12px; color:var(--muted); margin:12px 0 4px}
+.modal input[type=date],.modal input[type=time],.modal input[type=text],.modal select{
+  width:100%; padding:10px; border-radius:10px; border:1px solid var(--border);
+  background:var(--panel2); color:var(--text); color-scheme:dark;
+}
+.modal .row{display:flex; gap:10px}
+.modal .row>div{flex:1}
+.cat-chips{display:flex; gap:6px; flex-wrap:wrap}
+.cat-chips button{
+  padding:7px 13px; border-radius:999px; background:var(--panel2); font-size:13px;
+  border:1px solid var(--border); color:var(--text); display:flex; align-items:center; gap:6px;
+}
+.cat-chips button .dot{width:10px; height:10px; border-radius:50%}
+.cat-chips button.sel{border-color:#fff; background:#2c3247}
+.dur-chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.dur-chips button{padding:5px 11px; border-radius:999px; background:var(--panel2); font-size:12px; color:var(--muted)}
+.modal-actions{display:flex; gap:8px; margin-top:20px}
+.modal-actions .grow{flex:1}
+.swatches{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.swatches button{width:30px; height:30px; border-radius:8px; border:2px solid transparent}
+.swatches button.sel{border-color:#fff}
+
+/* ---------- mobile ---------- */
+.bottom-nav{display:none}
+@media(max-width:640px){
+  header h1 span{display:none}
+  header{padding:8px 10px; gap:6px}
+  .tabs{display:none}
+  .weeknav .label{min-width:0; font-size:13px}
+  .bottom-nav{
+    display:flex; flex:0 0 auto; border-top:1px solid var(--border); background:var(--panel);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .bottom-nav button{flex:1; padding:9px 0 7px; font-size:11px; color:var(--muted); display:flex; flex-direction:column; align-items:center; gap:2px}
+  .bottom-nav button.active{color:var(--accent)}
+  .bottom-nav .ic{font-size:20px; line-height:1}
+  .fab{bottom:calc(74px + env(safe-area-inset-bottom))}
+  :root{--hour-px:52px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="logo"></span><span>Planer</span></h1>
+  <div class="tabs" id="tabs">
+    <button data-tab="cal" class="active">Kalendarz</button>
+    <button data-tab="todo">Lista</button>
+    <button data-tab="stats">Statystyki</button>
+    <button data-tab="cats">Zadania</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="viewmode" id="viewmode">
+    <button data-mode="day">1</button>
+    <button data-mode="three">3</button>
+    <button data-mode="week" class="active">7</button>
+  </div>
+  <div class="weeknav">
+    <button id="navPrev">‹</button>
+    <button id="navToday">Dziś</button>
+    <button id="navNext">›</button>
+    <span class="label" id="navLabel"></span>
+  </div>
+</header>
+
+<main>
+  <!-- KALENDARZ -->
+  <div class="view active" id="view-cal">
+    <div class="cal-head" id="calHead"></div>
+    <div class="cal-scroll" id="calScroll" style="position:relative">
+      <div class="hint" id="calHint" hidden>Kliknij w siatkę, aby dodać blok</div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <!-- LISTA DO ZROBIENIA -->
+  <div class="view" id="view-todo">
+    <div class="todo-wrap">
+      <div class="todo-add">
+        <input id="todoInput" type="text" placeholder="Co jest do zrobienia?" enterkeyhint="done">
+        <button class="btn" id="todoAddBtn">Dodaj</button>
+      </div>
+      <div id="todoActive"></div>
+      <div id="todoDoneSec"></div>
+    </div>
+  </div>
+
+  <!-- STATYSTYKI -->
+  <div class="view" id="view-stats">
+    <div class="stats-wrap" id="statsWrap"></div>
+  </div>
+
+  <!-- ZADANIA -->
+  <div class="view" id="view-cats">
+    <div class="cats-wrap">
+      <div class="section-t">Rodzaje zadań</div>
+      <div id="catList"></div>
+      <div class="btnrow">
+        <button class="btn" id="addCatBtn">+ Nowe zadanie</button>
+      </div>
+      <div class="section-t">Dane</div>
+      <div class="btnrow">
+        <button class="btn ghost" id="exportBtn">⬇ Eksport JSON</button>
+        <button class="btn ghost" id="importBtn">⬆ Import JSON</button>
+        <input type="file" id="importFile" accept=".json" hidden>
+      </div>
+      <p style="color:var(--muted);font-size:12.5px">Dane zapisują się automatycznie w tej przeglądarce (localStorage). Zrób eksport, jeśli chcesz przenieść je na inne urządzenie.</p>
+    </div>
+  </div>
+</main>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button data-tab="cal" class="active"><span class="ic">📅</span>Kalendarz</button>
+  <button data-tab="todo"><span class="ic">✅</span>Lista</button>
+  <button data-tab="stats"><span class="ic">📊</span>Statystyki</button>
+  <button data-tab="cats"><span class="ic">🏷️</span>Zadania</button>
+</nav>
+
+<button class="fab" id="fab">+</button>
+
+<!-- MODAL: blok -->
+<div class="modal-back" id="blockModal">
+  <div class="modal">
+    <h3 id="bmTitle">Nowy blok</h3>
+    <label>Zadanie</label>
+    <div class="cat-chips" id="bmCats"></div>
+    <label>Data</label>
+    <input type="date" id="bmDate">
+    <div class="row">
+      <div><label>Od</label><input type="time" id="bmStart" step="900"></div>
+      <div><label>Do</label><input type="time" id="bmEnd" step="900"></div>
+    </div>
+    <div class="dur-chips" id="bmDur">
+      <button data-d="30">30 min</button><button data-d="60">1 h</button>
+      <button data-d="120">2 h</button><button data-d="240">4 h</button>
+      <button data-d="480">8 h</button>
+    </div>
+    <div id="bmRepeatWrap">
+      <label>Powtarzanie</label>
+      <select id="bmRepeat">
+        <option value="none">Tylko ten dzień</option>
+        <option value="daily">Codziennie przez 7 dni</option>
+        <option value="weekdays">Dni robocze (pn–pt, 7 dni)</option>
+      </select>
+    </div>
+    <label>Notatka</label>
+    <input type="text" id="bmNote" placeholder="opcjonalnie">
+    <div class="modal-actions">
+      <button class="btn danger" id="bmDelete">Usuń</button>
+      <span class="grow"></span>
+      <button class="btn ghost" id="bmCancel">Anuluj</button>
+      <button class="btn" id="bmSave">Zapisz</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: pozycja listy do zrobienia -->
+<div class="modal-back" id="todoModal">
+  <div class="modal">
+    <h3>Edytuj pozycję</h3>
+    <label>Treść</label>
+    <input type="text" id="tmText">
+    <label>Termin (opcjonalnie)</label>
+    <input type="date" id="tmDate">
+    <label>Powiązane zadanie (opcjonalnie)</label>
+    <div class="cat-chips" id="tmCats"></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="tmDelete">Usuń</button>
+      <span class="grow"></span>
+      <button class="btn ghost" id="tmCancel">Anuluj</button>
+      <button class="btn" id="tmSave">Zapisz</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: zadanie/kategoria -->
+<div class="modal-back" id="catModal">
+  <div class="modal">
+    <h3 id="cmTitle">Nowe zadanie</h3>
+    <label>Nazwa</label>
+    <input type="text" id="cmName" placeholder="np. Trening, Nauka, Projekt X">
+    <label>Kolor</label>
+    <div class="swatches" id="cmSwatches"></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="cmDelete">Usuń</button>
+      <span class="grow"></span>
+      <button class="btn ghost" id="cmCancel">Anuluj</button>
+      <button class="btn" id="cmSave">Zapisz</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================= dane ================= */
+const LS_KEY = "planner_v1";
+const DEFAULT_CATS = [
+  { id:"sleep", name:"Sen",   color:"#7c6ff0", fixed:true },
+  { id:"work",  name:"Praca", color:"#2dd4a8", fixed:true },
+];
+const SWATCHES = ["#7c6ff0","#2dd4a8","#4f8cff","#ff5d6c","#ffb74f","#f06ec2","#5fd0f0","#a3e05a","#c98bff","#ff8a5f","#8b91a7","#e8d44f"];
+
+let state = load();
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_KEY));
+    if(s && Array.isArray(s.cats) && Array.isArray(s.blocks)){
+      if(!Array.isArray(s.todos)) s.todos = [];
+      return s;
+    }
+  }catch(e){}
+  return { cats: structuredClone(DEFAULT_CATS), blocks: [], todos: [], lastCat:"work" };
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+const uid = () => Math.random().toString(36).slice(2,10);
+const catById = id => state.cats.find(c=>c.id===id) || {name:"?", color:"#8b91a7"};
+
+/* ================= daty / czas ================= */
+const pad = n => String(n).padStart(2,"0");
+const ds = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const fromDs = s => { const [y,m,dd]=s.split("-").map(Number); return new Date(y,m-1,dd); };
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const startOfWeek = d => addDays(d, -((d.getDay()+6)%7)); // poniedziałek
+const fmtMin = m => pad(Math.floor((m%1440)/60))+":"+pad(m%60);
+const parseTime = s => { const [h,mi]=s.split(":").map(Number); return h*60+mi; };
+const minToH = m => {
+  const h = Math.floor(m/60), mi = m%60;
+  return mi ? `${h} h ${mi} min` : `${h} h`;
+};
+const DOW = ["pn","wt","śr","cz","pt","so","nd"];
+const todayDs = () => ds(new Date());
+
+/* ================= stan UI ================= */
+let activeTab = "cal";
+let viewMode = window.innerWidth <= 640 ? "day" : "week";
+let anchor = new Date();            // dzień odniesienia kalendarza
+let statsPeriod = "week";           // week | month
+let statsOffset = 0;
+let editingBlockId = null;
+let editingCatId = null;
+let modalCat = null, modalColor = null;
+
+/* ================= nawigacja ================= */
+function setTab(t){
+  activeTab = t;
+  document.querySelectorAll("#tabs button, #bottomNav button").forEach(b=>b.classList.toggle("active", b.dataset.tab===t));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+t));
+  document.getElementById("fab").style.display = t==="cal" ? "" : "none";
+  render();
+}
+document.querySelectorAll("#tabs button, #bottomNav button").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+document.getElementById("viewmode").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+  viewMode = b.dataset.mode;
+  document.querySelectorAll("#viewmode button").forEach(x=>x.classList.toggle("active", x===b));
+  renderCalendar();
+});
+document.querySelectorAll("#viewmode button").forEach(b=>b.classList.toggle("active", b.dataset.mode===viewMode));
+
+document.getElementById("navPrev").onclick = ()=>nav(-1);
+document.getElementById("navNext").onclick = ()=>nav(1);
+document.getElementById("navToday").onclick = ()=>{ anchor=new Date(); statsOffset=0; render(); };
+function nav(dir){
+  if(activeTab==="todo"||activeTab==="cats") return;
+  if(activeTab==="stats"){ statsOffset+=dir; renderStats(); return; }
+  const step = viewMode==="week" ? 7 : viewMode==="three" ? 3 : 1;
+  anchor = addDays(anchor, dir*step);
+  renderCalendar();
+}
+
+/* ================= kalendarz ================= */
+function visibleDays(){
+  if(viewMode==="week"){ const s=startOfWeek(anchor); return [...Array(7)].map((_,i)=>addDays(s,i)); }
+  if(viewMode==="three") return [0,1,2].map(i=>addDays(anchor,i));
+  return [anchor];
+}
+function hourPx(){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hour-px")); }
+
+function renderCalendar(){
+  const days = visibleDays();
+  const head = document.getElementById("calHead");
+  const grid = document.getElementById("calGrid");
+  document.documentElement.style.setProperty("--days", days.length);
+
+  // etykieta nawigacji
+  const lbl = document.getElementById("navLabel");
+  const f = (d,o)=>d.toLocaleDateString("pl-PL",o);
+  if(days.length===1) lbl.textContent = f(days[0],{weekday:"long", day:"numeric", month:"short"});
+  else lbl.textContent = f(days[0],{day:"numeric",month:"short"})+" – "+f(days[days.length-1],{day:"numeric",month:"short",year:"numeric"});
+
+  // nagłówki dni
+  head.innerHTML = '<div></div>' + days.map(d=>
+    `<div class="dh ${ds(d)===todayDs()?"today":""}" data-date="${ds(d)}">${DOW[(d.getDay()+6)%7]}<b>${d.getDate()}</b></div>`
+  ).join("");
+  head.querySelectorAll(".dh").forEach(el=>el.onclick=()=>{
+    anchor = fromDs(el.dataset.date); viewMode="day";
+    document.querySelectorAll("#viewmode button").forEach(x=>x.classList.toggle("active", x.dataset.mode==="day"));
+    renderCalendar();
+  });
+
+  // siatka
+  const HP = hourPx();
+  let html = '<div class="time-col">';
+  for(let h=1;h<24;h++) html += `<div style="top:${h*HP}px">${pad(h)}:00</div>`;
+  html += '</div>';
+  for(const d of days){
+    const dstr = ds(d);
+    const dayBlocks = state.blocks.filter(b=>b.date===dstr);
+    html += `<div class="day-col ${dstr===todayDs()?"today":""}" data-date="${dstr}">`;
+    html += layoutBlocks(dayBlocks, HP);
+    if(dstr===todayDs()){
+      const now = new Date();
+      html += `<div class="now-line" style="top:${(now.getHours()*60+now.getMinutes())/60*HP}px"></div>`;
+    }
+    html += `</div>`;
+  }
+  grid.innerHTML = html;
+
+  document.getElementById("calHint").hidden = state.blocks.length>0;
+
+  // szerokość scrollbara — wyrównanie nagłówka
+  const sc = document.getElementById("calScroll");
+  document.documentElement.style.setProperty("--sbw",(sc.offsetWidth-sc.clientWidth)+"px");
+
+  grid.querySelectorAll(".day-col").forEach(attachColEvents);
+  grid.querySelectorAll(".blk").forEach(el=>{
+    el.onclick = e => { e.stopPropagation(); openBlockModal(el.dataset.id); };
+  });
+}
+
+function layoutBlocks(blocks, HP){
+  const sorted=[...blocks].sort((a,b)=>a.start-b.start || b.end-a.end);
+  let html="", cluster=[], clusterEnd=-1;
+  const flush=()=>{
+    if(!cluster.length) return;
+    const lanes=[];
+    for(const b of cluster){
+      let li = lanes.findIndex(end=>end<=b.start);
+      if(li<0){ li=lanes.length; lanes.push(0); }
+      lanes[li]=b.end; b._lane=li;
+    }
+    const n=lanes.length;
+    for(const b of cluster){
+      const c=catById(b.cat), top=b.start/60*HP, h=Math.max((b.end-b.start)/60*HP,16);
+      const w=96/n, l=2+b._lane*w;
+      html+=`<div class="blk ${h<34?"tiny":""}" data-id="${b.id}" style="top:${top}px;height:${h-2}px;left:${l}%;width:${w-1}%;background:${c.color}33;border-color:${c.color};color:${c.color}">`+
+            `<b style="color:var(--text)">${esc(c.name)}${b.note?" · "+esc(b.note):""}</b><span class="t">${fmtMin(b.start)}–${b.end===1440?"24:00":fmtMin(b.end)}</span></div>`;
+    }
+    cluster=[]; clusterEnd=-1;
+  };
+  for(const b of sorted){
+    if(cluster.length && b.start>=clusterEnd) flush();
+    cluster.push(b); clusterEnd=Math.max(clusterEnd,b.end);
+  }
+  flush();
+  return html;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* klik / drag w kolumnie dnia */
+let drag=null;
+function yToMin(e,col){
+  const r=col.getBoundingClientRect();
+  const m=(e.clientY-r.top)/hourPx()*60;
+  return Math.max(0, Math.min(1440, Math.round(m/30)*30));
+}
+function attachColEvents(col){
+  col.addEventListener("mousedown", e=>{
+    if(e.button!==0 || e.target.closest(".blk")) return;
+    drag={col, start:yToMin(e,col), moved:false, ghost:null};
+  });
+  col.addEventListener("click", e=>{
+    if(e.target.closest(".blk")) return;
+    if(drag && drag.moved){ return; }
+    const m=yToMin(e,col);
+    openBlockModal(null, col.dataset.date, Math.min(m,1380), Math.min(m,1380)+60);
+  });
+}
+window.addEventListener("mousemove", e=>{
+  if(!drag) return;
+  const cur=yToMin(e,drag.col);
+  if(!drag.moved && Math.abs(cur-drag.start)<15) return;
+  drag.moved=true;
+  if(!drag.ghost){ drag.ghost=document.createElement("div"); drag.ghost.className="drag-ghost"; drag.col.appendChild(drag.ghost); }
+  const a=Math.min(drag.start,cur), b=Math.max(drag.start,cur);
+  drag.ghost.style.top=a/60*hourPx()+"px";
+  drag.ghost.style.height=Math.max((b-a)/60*hourPx(),8)+"px";
+  drag.a=a; drag.b=b;
+});
+window.addEventListener("mouseup", ()=>{
+  if(!drag) return;
+  const d=drag;
+  if(d.ghost) d.ghost.remove();
+  if(d.moved && d.b-d.a>=30) openBlockModal(null, d.col.dataset.date, d.a, d.b);
+  setTimeout(()=>{ drag=null; }, 0);
+});
+
+/* ================= modal bloku ================= */
+const bm = id => document.getElementById(id);
+function openBlockModal(blockId, date, start, end){
+  editingBlockId = blockId;
+  let b;
+  if(blockId){
+    b = state.blocks.find(x=>x.id===blockId);
+    bm("bmTitle").textContent="Edytuj blok";
+    bm("bmDelete").style.display="";
+    bm("bmRepeatWrap").style.display="none";
+  }else{
+    const now=new Date();
+    const defStart = start!=null ? start : Math.min(Math.round((now.getHours()*60+now.getMinutes())/30)*30,1380);
+    b = { date: date||todayDs(), start:defStart, end:end!=null?end:Math.min(defStart+60,1440), cat:state.lastCat||"work", note:"" };
+    bm("bmTitle").textContent="Nowy blok";
+    bm("bmDelete").style.display="none";
+    bm("bmRepeatWrap").style.display="";
+    bm("bmRepeat").value="none";
+  }
+  modalCat=b.cat;
+  bm("bmDate").value=b.date;
+  bm("bmStart").value=fmtMin(b.start);
+  bm("bmEnd").value=b.end>=1440?"00:00":fmtMin(b.end);
+  bm("bmNote").value=b.note||"";
+  renderBmCats();
+  bm("blockModal").classList.add("open");
+}
+function renderBmCats(){
+  bm("bmCats").innerHTML = state.cats.map(c=>
+    `<button data-id="${c.id}" class="${c.id===modalCat?"sel":""}"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</button>`
+  ).join("");
+  bm("bmCats").querySelectorAll("button").forEach(x=>x.onclick=()=>{ modalCat=x.dataset.id; renderBmCats(); });
+}
+bm("bmDur").querySelectorAll("button").forEach(x=>x.onclick=()=>{
+  const s=parseTime(bm("bmStart").value||"08:00");
+  const e=Math.min(s+Number(x.dataset.d),1440);
+  bm("bmEnd").value = e>=1440?"00:00":fmtMin(e);
+});
+bm("bmCancel").onclick=()=>bm("blockModal").classList.remove("open");
+bm("blockModal").onclick=e=>{ if(e.target.id==="blockModal") bm("blockModal").classList.remove("open"); };
+bm("bmDelete").onclick=()=>{
+  state.blocks = state.blocks.filter(b=>b.id!==editingBlockId);
+  save(); bm("blockModal").classList.remove("open"); render();
+};
+bm("bmSave").onclick=()=>{
+  const date=bm("bmDate").value;
+  let s=parseTime(bm("bmStart").value||"0:00");
+  let e=parseTime(bm("bmEnd").value||"0:00");
+  if(!date) return;
+  const note=bm("bmNote").value.trim();
+  state.lastCat=modalCat;
+
+  // blok przez północ -> podział na dwa dni
+  const mk=(dt,a,b2)=>({id:uid(), date:dt, start:a, end:b2, cat:modalCat, note});
+  const pieces=[];
+  if(e<=s){ pieces.push([date,s,1440]); if(e>0) pieces.push([ds(addDays(fromDs(date),1)),0,e]); }
+  else pieces.push([date,s,e]);
+
+  if(editingBlockId){
+    state.blocks = state.blocks.filter(b=>b.id!==editingBlockId);
+    for(const [dt,a,b2] of pieces) state.blocks.push(mk(dt,a,b2));
+  }else{
+    const rep=bm("bmRepeat").value;
+    const repDays = rep==="none" ? [0] : [0,1,2,3,4,5,6];
+    for(const off of repDays){
+      const base=addDays(fromDs(date),off);
+      if(rep==="weekdays" && (base.getDay()===0||base.getDay()===6)) continue;
+      for(const [dt,a,b2] of pieces){
+        const shifted = ds(addDays(fromDs(dt),off));
+        state.blocks.push(mk(shifted,a,b2));
+      }
+    }
+  }
+  save(); bm("blockModal").classList.remove("open"); render();
+};
+document.getElementById("fab").onclick=()=>openBlockModal(null, ds(anchor));
+
+/* ================= lista do zrobienia ================= */
+let editingTodoId = null, modalTodoCat = null;
+
+function addTodo(){
+  const inp = document.getElementById("todoInput");
+  const text = inp.value.trim();
+  if(!text) return;
+  state.todos.unshift({ id:uid(), text, done:false, created:todayDs() });
+  save(); inp.value=""; inp.focus(); renderTodos();
+}
+document.getElementById("todoAddBtn").onclick = addTodo;
+document.getElementById("todoInput").addEventListener("keydown", e=>{ if(e.key==="Enter") addTodo(); });
+
+function dueBadge(t){
+  if(!t.due) return "";
+  const over = !t.done && t.due < todayDs();
+  const isToday = t.due === todayDs();
+  const lbl = isToday ? "dziś" : fromDs(t.due).toLocaleDateString("pl-PL",{day:"numeric",month:"short"});
+  return `<span class="badge ${over?"over":""}">📅 ${lbl}${over?" · po terminie":""}</span>`;
+}
+function todoItemHtml(t){
+  const c = t.cat ? catById(t.cat) : null;
+  const meta = (t.due||c) ? `<div class="meta">${dueBadge(t)}${c?`<span class="badge"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</span>`:""}</div>` : "";
+  return `<div class="todo-item ${t.done?"done":""}" data-id="${t.id}">
+    <span class="chk" data-act="toggle">${t.done?"✓":""}</span>
+    <span class="tx" data-act="edit">${esc(t.text)}${meta}</span>
+    ${t.done?"":`<button class="act" data-act="plan" title="Zaplanuj w kalendarzu">📅</button>`}
+    <button class="act" data-act="del" title="Usuń">🗑</button>
+  </div>`;
+}
+function renderTodos(){
+  document.getElementById("navLabel").textContent = "";
+  const active = state.todos.filter(t=>!t.done).sort((a,b)=>{
+    if(a.due && b.due) return a.due<b.due?-1:a.due>b.due?1:0;
+    if(a.due) return -1;
+    if(b.due) return 1;
+    return 0;
+  });
+  const done = state.todos.filter(t=>t.done).sort((a,b)=>(b.doneAt||"")<(a.doneAt||"")?-1:1);
+  document.getElementById("todoActive").innerHTML =
+    active.length ? active.map(todoItemHtml).join("")
+    : `<div class="empty">Brak zadań do zrobienia.<br>Dodaj pierwsze powyżej 👆</div>`;
+  document.getElementById("todoDoneSec").innerHTML = done.length ? `
+    <div class="section-t">Ukończone (${done.length})</div>
+    ${done.map(todoItemHtml).join("")}
+    <div class="btnrow"><button class="btn ghost" id="clearDoneBtn">Wyczyść ukończone</button></div>` : "";
+  const clr = document.getElementById("clearDoneBtn");
+  if(clr) clr.onclick = ()=>{ state.todos = state.todos.filter(t=>!t.done); save(); renderTodos(); };
+  document.querySelectorAll(".todo-item [data-act], .todo-item .chk, .todo-item .tx").forEach(el=>{
+    el.onclick = e=>{
+      const id = e.target.closest(".todo-item").dataset.id;
+      const t = state.todos.find(x=>x.id===id);
+      const act = el.dataset.act;
+      if(act==="toggle"){
+        t.done = !t.done;
+        t.doneAt = t.done ? todayDs() : undefined;
+        save(); renderTodos();
+      }else if(act==="del"){
+        state.todos = state.todos.filter(x=>x.id!==id);
+        save(); renderTodos();
+      }else if(act==="plan"){
+        openBlockModal(null, t.due && t.due >= todayDs() ? t.due : todayDs());
+        bm("bmNote").value = t.text;
+        if(t.cat){ modalCat = t.cat; renderBmCats(); }
+      }else if(act==="edit"){
+        openTodoModal(id);
+      }
+    };
+  });
+}
+function openTodoModal(id){
+  editingTodoId = id;
+  const t = state.todos.find(x=>x.id===id);
+  document.getElementById("tmText").value = t.text;
+  document.getElementById("tmDate").value = t.due || "";
+  modalTodoCat = t.cat || null;
+  renderTmCats();
+  document.getElementById("todoModal").classList.add("open");
+}
+function renderTmCats(){
+  document.getElementById("tmCats").innerHTML =
+    `<button data-id="" class="${!modalTodoCat?"sel":""}">brak</button>` +
+    state.cats.map(c=>`<button data-id="${c.id}" class="${c.id===modalTodoCat?"sel":""}"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</button>`).join("");
+  document.querySelectorAll("#tmCats button").forEach(x=>x.onclick=()=>{ modalTodoCat=x.dataset.id||null; renderTmCats(); });
+}
+document.getElementById("tmCancel").onclick = ()=>document.getElementById("todoModal").classList.remove("open");
+document.getElementById("todoModal").onclick = e=>{ if(e.target.id==="todoModal") e.target.classList.remove("open"); };
+document.getElementById("tmSave").onclick = ()=>{
+  const t = state.todos.find(x=>x.id===editingTodoId);
+  const text = document.getElementById("tmText").value.trim();
+  if(!t || !text) return;
+  t.text = text;
+  t.due = document.getElementById("tmDate").value || undefined;
+  t.cat = modalTodoCat || undefined;
+  save(); document.getElementById("todoModal").classList.remove("open"); renderTodos();
+};
+document.getElementById("tmDelete").onclick = ()=>{
+  state.todos = state.todos.filter(x=>x.id!==editingTodoId);
+  save(); document.getElementById("todoModal").classList.remove("open"); renderTodos();
+};
+
+/* ================= statystyki ================= */
+function statsRange(){
+  const now=new Date();
+  if(statsPeriod==="week"){
+    const s=addDays(startOfWeek(now), statsOffset*7);
+    return {from:s, to:addDays(s,6), label:s.toLocaleDateString("pl-PL",{day:"numeric",month:"short"})+" – "+addDays(s,6).toLocaleDateString("pl-PL",{day:"numeric",month:"short",year:"numeric"})};
+  }
+  const m=new Date(now.getFullYear(), now.getMonth()+statsOffset, 1);
+  const e=new Date(m.getFullYear(), m.getMonth()+1, 0);
+  return {from:m, to:e, label:m.toLocaleDateString("pl-PL",{month:"long",year:"numeric"})};
+}
+function renderStats(){
+  const {from,to,label}=statsRange();
+  document.getElementById("navLabel").textContent=label;
+  const days=[];
+  for(let d=new Date(from); d<=to; d=addDays(d,1)) days.push(ds(d));
+  const inRange = state.blocks.filter(b=>days.includes(b.date));
+
+  const perCat={}, perDay={};
+  for(const d of days) perDay[d]={};
+  let total=0;
+  for(const b of inRange){
+    const len=b.end-b.start;
+    perCat[b.cat]=(perCat[b.cat]||0)+len;
+    perDay[b.date][b.cat]=(perDay[b.date][b.cat]||0)+len;
+    total+=len;
+  }
+  const nDays=days.length;
+  const sleep=perCat["sleep"]||0, work=perCat["work"]||0;
+  const fmtAvg=m=>{ const h=m/nDays/60; return h.toFixed(1).replace(".",",")+" h"; };
+
+  let html=`
+  <div class="period-bar">
+    <button class="chip ${statsPeriod==="week"?"active":""}" data-p="week">Tydzień</button>
+    <button class="chip ${statsPeriod==="month"?"active":""}" data-p="month">Miesiąc</button>
+    <span style="color:var(--muted);font-size:13px;margin-left:auto">${label}</span>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="l">😴 Sen średnio / dobę</div><div class="v">${fmtAvg(sleep)}</div></div>
+    <div class="card"><div class="l">💼 Praca średnio / dobę</div><div class="v">${fmtAvg(work)}</div></div>
+    <div class="card"><div class="l">Zaplanowane łącznie</div><div class="v">${minToH(total)}</div></div>
+    <div class="card"><div class="l">Wypełnienie doby</div><div class="v">${Math.round(total/(nDays*1440)*100)}%</div></div>
+    <div class="card"><div class="l">✅ Ukończone z listy</div><div class="v">${state.todos.filter(t=>t.done&&days.includes(t.doneAt)).length}</div></div>
+  </div>`;
+
+  if(!inRange.length){
+    html+=`<div class="empty">Brak bloków w tym okresie.<br>Dodaj coś w kalendarzu, a tu pojawią się statystyki.</div>`;
+  }else{
+    // słupki dzienne
+    html+=`<div class="section-t">Dzień po dniu</div><div class="daybars">`;
+    for(const d of days){
+      const dd=fromDs(d);
+      let segs="";
+      for(const [cid,len] of Object.entries(perDay[d])){
+        segs+=`<div class="seg" style="height:${len/1440*120}px;background:${catById(cid).color}" title="${esc(catById(cid).name)}: ${minToH(len)}"></div>`;
+      }
+      const lab = statsPeriod==="week" ? DOW[(dd.getDay()+6)%7] : (dd.getDate()%2? dd.getDate():"");
+      html+=`<div class="daybar"><div class="stack">${segs}</div><div class="dl">${lab}</div></div>`;
+    }
+    html+=`</div>`;
+
+    // per kategoria
+    html+=`<div class="section-t">Według zadań</div>`;
+    const rows=Object.entries(perCat).sort((a,b)=>b[1]-a[1]);
+    const max=rows[0][1];
+    for(const [cid,len] of rows){
+      const c=catById(cid);
+      html+=`<div class="catrow">
+        <span class="dot" style="background:${c.color}"></span>
+        <span class="nm">${esc(c.name)}<small>śr. ${fmtAvg(len)} / dobę · ${Math.round(len/total*100)}% planu</small></span>
+        <span class="bar"><i style="width:${len/max*100}%;background:${c.color}"></i></span>
+        <span class="hrs">${minToH(len)}</span>
+      </div>`;
+    }
+  }
+  const w=document.getElementById("statsWrap");
+  w.innerHTML=html;
+  w.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{ statsPeriod=b.dataset.p; statsOffset=0; renderStats(); });
+}
+
+/* ================= zadania / kategorie ================= */
+function renderCats(){
+  const weekDays=[...Array(7)].map((_,i)=>ds(addDays(startOfWeek(new Date()),i)));
+  document.getElementById("catList").innerHTML = state.cats.map(c=>{
+    const wk=state.blocks.filter(b=>b.cat===c.id && weekDays.includes(b.date)).reduce((s,b)=>s+b.end-b.start,0);
+    return `<div class="catitem" data-id="${c.id}">
+      <span class="dot" style="background:${c.color}"></span>
+      <span class="nm">${esc(c.name)}<small>${wk?("w tym tygodniu: "+minToH(wk)):"brak bloków w tym tygodniu"}${c.fixed?" · wbudowane":""}</small></span>
+      <span class="arr">›</span>
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".catitem").forEach(el=>el.onclick=()=>openCatModal(el.dataset.id));
+}
+function openCatModal(catId){
+  editingCatId=catId;
+  const c=catId?state.cats.find(x=>x.id===catId):null;
+  document.getElementById("cmTitle").textContent=c?"Edytuj zadanie":"Nowe zadanie";
+  document.getElementById("cmName").value=c?c.name:"";
+  document.getElementById("cmName").disabled=!!(c&&c.fixed);
+  modalColor=c?c.color:SWATCHES[(state.cats.length)%SWATCHES.length];
+  document.getElementById("cmDelete").style.display=(c&&!c.fixed)?"":"none";
+  renderSwatches();
+  document.getElementById("catModal").classList.add("open");
+}
+function renderSwatches(){
+  document.getElementById("cmSwatches").innerHTML=SWATCHES.map(col=>
+    `<button data-c="${col}" class="${col===modalColor?"sel":""}" style="background:${col}"></button>`).join("");
+  document.querySelectorAll("#cmSwatches button").forEach(b=>b.onclick=()=>{ modalColor=b.dataset.c; renderSwatches(); });
+}
+document.getElementById("addCatBtn").onclick=()=>openCatModal(null);
+document.getElementById("cmCancel").onclick=()=>document.getElementById("catModal").classList.remove("open");
+document.getElementById("catModal").onclick=e=>{ if(e.target.id==="catModal") e.target.classList.remove("open"); };
+document.getElementById("cmSave").onclick=()=>{
+  const name=document.getElementById("cmName").value.trim();
+  if(!name) return;
+  if(editingCatId){
+    const c=state.cats.find(x=>x.id===editingCatId);
+    if(!c.fixed) c.name=name;
+    c.color=modalColor;
+  }else{
+    state.cats.push({id:uid(), name, color:modalColor});
+  }
+  save(); document.getElementById("catModal").classList.remove("open"); render();
+};
+document.getElementById("cmDelete").onclick=()=>{
+  const c=state.cats.find(x=>x.id===editingCatId);
+  if(!c||c.fixed) return;
+  const n=state.blocks.filter(b=>b.cat===editingCatId).length;
+  if(n && !confirm(`Usunąć zadanie „${c.name}” razem z ${n} blokami w kalendarzu?`)) return;
+  state.cats=state.cats.filter(x=>x.id!==editingCatId);
+  state.blocks=state.blocks.filter(b=>b.cat!==editingCatId);
+  if(state.lastCat===editingCatId) state.lastCat="work";
+  save(); document.getElementById("catModal").classList.remove("open"); render();
+};
+
+/* ================= eksport / import ================= */
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="planer-"+todayDs()+".json";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById("importBtn").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const s=JSON.parse(r.result);
+      if(!Array.isArray(s.cats)||!Array.isArray(s.blocks)) throw 0;
+      if(confirm("Zastąpić obecne dane danymi z pliku?")){ state=s; save(); render(); }
+    }catch(err){ alert("Nieprawidłowy plik."); }
+  };
+  r.readAsText(f);
+  e.target.value="";
+};
+
+/* ================= render ================= */
+function render(){
+  if(activeTab==="cal") renderCalendar();
+  else if(activeTab==="todo") renderTodos();
+  else if(activeTab==="stats") renderStats();
+  else renderCats();
+}
+render();
+// przewiń do godziny 7:00 na start
+document.getElementById("calScroll").scrollTop = 7*hourPx()-10;
+// odśwież linię "teraz" co minutę
+setInterval(()=>{ if(activeTab==="cal") renderCalendar(); }, 60000);
+window.addEventListener("resize", ()=>{ if(activeTab==="cal") renderCalendar(); });
+</script>
+</body>
+</html>

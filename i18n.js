@@ -89,7 +89,8 @@ const I18N = {
     form_sent: `✓ MESSAGE SENT! I will get back to you soon.`,
     form_sent_btn: `✓ SENT`,
     form_error: `✗ SENDING FAILED — email me directly: damiansuchodolski88@gmail.com`,
-    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · Industrial Robots · Vision · VIBN | Made with <span>♥</span> and lots of coffee ☕`
+    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · Industrial Robots · Vision · VIBN | Made with <span>♥</span> and lots of coffee ☕`,
+    footer_planner: `⏱ Time planner`
   },
   de: {
     page_title: `DS Automation Engineering | Damian Suchodolski — SPS • Industrieroboter • Bildverarbeitung • VIBN`,
@@ -171,7 +172,8 @@ const I18N = {
     form_sent: `✓ NACHRICHT GESENDET! Ich melde mich bald.`,
     form_sent_btn: `✓ GESENDET`,
     form_error: `✗ SENDEN FEHLGESCHLAGEN — schreiben Sie direkt an: damiansuchodolski88@gmail.com`,
-    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>SPS · Industrieroboter · Bildverarbeitung · VIBN | Gemacht mit <span>♥</span> und viel Kaffee ☕`
+    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>SPS · Industrieroboter · Bildverarbeitung · VIBN | Gemacht mit <span>♥</span> und viel Kaffee ☕`,
+    footer_planner: `⏱ Zeitplaner`
   },
   zh: {
     page_title: `DS Automation Engineering | Damian Suchodolski — PLC • 工业机器人 • 视觉系统 • VIBN`,
@@ -253,7 +255,8 @@ const I18N = {
     form_sent: `✓ 消息已发送！我会尽快回复。`,
     form_sent_btn: `✓ 已发送`,
     form_error: `✗ 发送失败 — 请直接发邮件：damiansuchodolski88@gmail.com`,
-    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · 工业机器人 · 视觉 · VIBN | 用<span>♥</span>和大量咖啡制作 ☕`
+    footer_copy: `© 2026 DS Automation Engineering — Damian Suchodolski<br>PLC · 工业机器人 · 视觉 · VIBN | 用<span>♥</span>和大量咖啡制作 ☕`,
+    footer_planner: `⏱ 时间规划器`
   }
 };
 
