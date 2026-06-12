@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS Automation Engineering | Damian Suchodolski — PLC • Roboty przemysłowe • Vision • VIBN</title>
+<meta name="description" content="DS Automation Engineering — Damian Suchodolski. Freelance automatyk: PLC Siemens S7-1500, roboty KUKA / ABB / Fanuc, systemy wizyjne Keyence, VIBN. 13+ lat doświadczenia, projekty dla Mercedes, Porsche, Audi, BMW, Northvolt.">
+<meta name="theme-color" content="#ffffff">
+<link rel="canonical" href="https://damiansuchodolski.github.io/pro.html">
+<meta property="og:title" content="DS Automation Engineering — PLC · Industrial Robots · Vision · VIBN">
+<meta property="og:description" content="Freelance industrial automation engineer. 13+ years: Siemens S7-1500, KUKA / ABB / Fanuc robots, Keyence vision, virtual commissioning (VIBN).">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://damiansuchodolski.github.io/pro.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23ffffff'/><rect x='3' y='4' width='10' height='8' fill='none' stroke='%230e7a52' stroke-width='1'/><rect x='5' y='6' width='2' height='2' fill='%230e7a52'/><rect x='9' y='6' width='2' height='2' fill='%230e7a52'/><rect x='6' y='10' width='4' height='1' fill='%230e7a52'/><rect x='7' y='1' width='2' height='2' fill='%23b45309'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acc:#0e7a52;
+  --acc-dark:#0a5c3e;
+  --acc2:#0b5fa5;
+  --warn:#b45309;
+  --ink:#16202a;
+  --mut:#5a6572;
+  --line:#e4e8ec;
+  --bg:#f7f8f9;
+  --card:#ffffff;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter','Noto Sans SC',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.65;
+}
+
+a{color:var(--acc);}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;
+}
+
+.nav-logo{font-weight:700;font-size:15px;letter-spacing:.5px;color:var(--ink);}
+.nav-logo span{color:var(--acc);}
+
+.nav-links{display:flex;gap:1.75rem;}
+.nav-links a{
+  color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;
+  padding:4px 0;border-bottom:2px solid transparent;transition:all .15s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);border-bottom-color:var(--acc);}
+
+.lang-switch{display:flex;gap:4px;align-items:center;}
+.lang-btn{
+  font-family:'Inter','Noto Sans SC',sans-serif;
+  font-size:12px;font-weight:600;
+  padding:5px 9px;border:1px solid var(--line);
+  background:#fff;color:var(--mut);cursor:pointer;border-radius:6px;
+  transition:all .15s;
+}
+.lang-btn:hover{border-color:var(--acc);color:var(--acc);}
+.lang-btn.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+
+.pixel-link{
+  font-size:12px;font-weight:600;text-decoration:none;
+  padding:5px 9px;border:1px solid var(--line);border-radius:6px;
+  color:var(--warn);background:#fff;transition:all .15s;
+}
+.pixel-link:hover{border-color:var(--warn);}
+
+.nav-burger{
+  display:none;background:#fff;border:1px solid var(--line);border-radius:6px;
+  color:var(--ink);font-size:16px;padding:6px 10px;cursor:pointer;
+}
+
+/* SECTIONS */
+.wrap{max-width:1020px;margin:0 auto;padding:0 2rem;}
+section{padding:4.5rem 0;}
+section.alt{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+
+.sec-head{margin-bottom:2.5rem;}
+.sec-tag{font-size:13px;font-weight:600;color:var(--acc);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:.4rem;}
+.section-title{font-size:28px;font-weight:700;line-height:1.3;}
+.section-title span{color:var(--acc);}
+
+/* HERO */
+#hero{padding:5.5rem 0 4rem;}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:3rem;align-items:center;}
+.hero-tagline{font-size:13px;font-weight:600;color:var(--acc);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.75rem;}
+.hero-hello{font-size:17px;color:var(--mut);margin-bottom:.25rem;}
+h1{font-size:42px;font-weight:700;line-height:1.15;margin-bottom:1.25rem;}
+h1 .accent{color:var(--acc);}
+.hero-desc{font-size:16.5px;color:var(--mut);margin-bottom:1.75rem;max-width:560px;}
+.hero-desc .hi{color:var(--ink);font-weight:600;}
+
+.hero-btns{display:flex;gap:.85rem;flex-wrap:wrap;}
+.btn{
+  display:inline-block;text-decoration:none;font-size:15px;font-weight:600;
+  padding:12px 22px;border-radius:8px;transition:all .15s;border:1px solid transparent;cursor:pointer;
+  font-family:'Inter','Noto Sans SC',sans-serif;
+}
+.btn-primary{background:var(--acc);color:#fff;}
+.btn-primary:hover{background:var(--acc-dark);}
+.btn-outline{border-color:var(--line);color:var(--ink);background:#fff;}
+.btn-outline:hover{border-color:var(--acc);color:var(--acc);}
+
+.hero-photo{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:1.75rem;text-align:center;
+}
+.hero-badge{
+  display:inline-block;font-size:12.5px;font-weight:600;color:var(--acc);
+  background:rgba(14,122,82,0.08);border:1px solid rgba(14,122,82,0.25);
+  padding:5px 12px;border-radius:99px;margin-bottom:1rem;
+}
+.hero-meta{font-size:14px;color:var(--mut);line-height:2;}
+.hero-meta b{color:var(--ink);font-weight:600;}
+
+.stats-bar{display:flex;gap:2.5rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:1.75rem;border-top:1px solid var(--line);}
+.stat-num{font-size:30px;font-weight:700;color:var(--acc);display:block;line-height:1.1;}
+.stat-label{font-size:13px;color:var(--mut);}
+
+/* BRANDS */
+.brands-strip{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:1.75rem 0;}
+.brands-title{text-align:center;font-size:12.5px;font-weight:600;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;}
+.brands-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 2rem;max-width:1020px;margin:0 auto;padding:0 2rem;}
+.brand-item{font-size:14px;font-weight:600;color:#9aa3ad;letter-spacing:.5px;white-space:nowrap;transition:color .2s;}
+.brand-item:hover{color:var(--acc);}
+
+/* SKILLS */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:1.6rem 1.7rem;transition:box-shadow .2s,border-color .2s;
+}
+.card:hover{border-color:#cfd6dc;box-shadow:0 6px 24px rgba(22,32,42,0.07);}
+.skill-name{font-size:17px;font-weight:600;margin-bottom:.5rem;}
+.skill-desc{font-size:14.5px;color:var(--mut);margin-bottom:1rem;}
+.skill-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{
+  font-size:12px;font-weight:600;color:var(--acc);
+  background:rgba(14,122,82,0.07);border:1px solid rgba(14,122,82,0.2);
+  padding:3px 10px;border-radius:99px;
+}
+.tag.blue{color:var(--acc2);background:rgba(11,95,165,0.07);border-color:rgba(11,95,165,0.2);}
+.tag.amber{color:var(--warn);background:rgba(180,83,9,0.07);border-color:rgba(180,83,9,0.2);}
+
+/* SERVICES */
+.service-title{font-size:17px;font-weight:600;margin-bottom:.5rem;}
+.service-desc{font-size:14.5px;color:var(--mut);margin-bottom:1rem;}
+.service-list{list-style:none;}
+.service-list li{
+  font-size:14px;color:var(--ink);padding:4px 0 4px 22px;position:relative;
+}
+.service-list li::before{content:'✓';position:absolute;left:0;color:var(--acc);font-weight:700;}
+.svc-num{font-size:13px;font-weight:700;color:#c2cad1;letter-spacing:1px;display:block;margin-bottom:.5rem;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;}
+
+.code-card{
+  background:#0f1720;border-radius:12px;overflow:hidden;
+  font-family:'JetBrains Mono','Noto Sans SC',monospace;font-size:13px;line-height:1.9;
+}
+.code-bar{background:#1a2430;padding:.6rem 1rem;display:flex;gap:7px;align-items:center;}
+.code-dot{width:11px;height:11px;border-radius:50%;background:#e0604f;}
+.code-dot:nth-child(2){background:#e0b14f;}
+.code-dot:nth-child(3){background:#57b97a;}
+.code-title{margin-left:auto;font-size:11px;color:#5a6a7a;}
+.code-body{padding:1.25rem 1.4rem;color:#c6d0da;}
+.t-line{display:block;}
+.t-prompt{color:#57b97a;}
+.t-cmd{color:#fff;font-weight:600;}
+.t-out{color:#9fb0c0;}
+.t-val{color:#e0b14f;}
+.t-str{color:#7cc3f0;}
+.t-comment{color:#4a5a6a;}
+.t-cursor{display:inline-block;width:8px;height:14px;background:#57b97a;vertical-align:middle;animation:blink .9s step-end infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+.timeline{position:relative;padding-left:1.75rem;}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line);}
+.tl-item{position:relative;margin-bottom:1.75rem;}
+.tl-dot{position:absolute;left:-1.75rem;top:6px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--acc);}
+.tl-year{font-size:12.5px;font-weight:700;color:var(--acc);letter-spacing:.5px;margin-bottom:2px;}
+.tl-title{font-size:15px;font-weight:600;margin-bottom:4px;line-height:1.4;}
+.tl-desc{font-size:13.5px;color:var(--mut);}
+
+/* PROJECTS */
+.proj-card{border-top:3px solid var(--acc);}
+.proj-card.c2{border-top-color:var(--acc2);}
+.proj-card.c3{border-top-color:var(--warn);}
+.project-type{font-size:11.5px;font-weight:700;color:var(--acc);letter-spacing:1px;margin-bottom:.4rem;}
+.proj-card.c2 .project-type{color:var(--acc2);}
+.proj-card.c3 .project-type{color:var(--warn);}
+.project-name{font-size:16px;font-weight:600;margin-bottom:.5rem;line-height:1.4;}
+.project-desc{font-size:14px;color:var(--mut);}
+
+.projlog-toggle{
+  margin:2rem auto 0;display:block;font-size:14px;font-weight:600;
+  padding:11px 22px;background:#fff;border:1px solid var(--line);border-radius:8px;
+  color:var(--acc);cursor:pointer;transition:all .15s;
+  font-family:'Inter','Noto Sans SC',sans-serif;
+}
+.projlog-toggle:hover{border-color:var(--acc);}
+
+.projlog{
+  display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  margin-top:1.25rem;padding:1.4rem 1.6rem;font-size:13.5px;line-height:2.05;color:var(--mut);
+  max-height:420px;overflow-y:auto;
+}
+.projlog.open{display:block;}
+.projlog .pl-line{display:block;}
+.projlog .pl-line::before{content:'▸ ';color:var(--acc);}
+.projlog .pl-line b{color:var(--ink);font-weight:600;}
+
+/* CERTS */
+.cert-card{display:flex;gap:14px;align-items:flex-start;padding:1.1rem 1.3rem;}
+.cert-year{
+  font-size:12px;font-weight:700;color:var(--warn);min-width:46px;
+  background:rgba(180,83,9,0.08);border-radius:6px;text-align:center;padding:3px 0;margin-top:2px;
+}
+.cert-name{font-size:14px;font-weight:500;line-height:1.5;}
+.cert-org{font-size:12.5px;color:var(--mut);margin-top:1px;}
+
+/* PROCESS */
+.process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;}
+.proc-step{text-align:center;padding:1.9rem 1.3rem;}
+.proc-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(11,95,165,0.08);color:var(--acc2);
+  font-size:16px;font-weight:700;margin-bottom:.9rem;
+}
+.proc-name{font-size:15.5px;font-weight:600;margin-bottom:.4rem;}
+.proc-desc{font-size:13.5px;color:var(--mut);}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;}
+.contact-intro{font-size:15px;color:var(--mut);margin-bottom:1.5rem;}
+
+.contact-box{
+  display:flex;gap:14px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:.95rem 1.2rem;margin-bottom:.7rem;transition:border-color .15s;
+}
+.contact-box:hover{border-color:var(--acc);}
+.contact-icon{font-size:19px;}
+.contact-label{font-size:11.5px;font-weight:700;color:var(--acc);letter-spacing:1px;text-transform:uppercase;}
+.contact-val{font-size:14.5px;}
+.contact-val a{color:var(--ink);text-decoration:none;border-bottom:1px dashed rgba(14,122,82,0.45);}
+.contact-val a:hover{color:var(--acc);}
+
+.status-card{
+  background:rgba(14,122,82,0.06);border:1px solid rgba(14,122,82,0.25);
+  border-radius:10px;padding:1rem 1.2rem;margin-top:1.25rem;
+}
+.status-label{font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.5px;margin-bottom:4px;}
+.status-note{font-size:13.5px;color:var(--mut);}
+.status-note span{color:var(--ink) !important;font-weight:600;}
+
+.contact-form{display:flex;flex-direction:column;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:12.5px;font-weight:600;color:var(--ink);letter-spacing:.3px;}
+.form-input,.form-textarea{
+  background:#fff;border:1px solid var(--line);border-radius:8px;
+  color:var(--ink);padding:.7rem 1rem;
+  font-family:'Inter','Noto Sans SC',sans-serif;font-size:14.5px;
+  outline:none;transition:border-color .15s,box-shadow .15s;resize:none;
+}
+.form-input:focus,.form-textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(14,122,82,0.12);}
+.form-textarea{height:120px;}
+.contact-form option{background:#fff !important;color:var(--ink) !important;}
+#form-msg{font-size:13.5px;font-weight:600;color:var(--acc);min-height:20px;text-align:center;}
+
+/* FOOTER */
+footer{background:#16202a;color:#8b98a5;padding:2.25rem 2rem;text-align:center;}
+.footer-logo{display:block;font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;margin-bottom:.6rem;}
+.footer-copy{font-size:13px;line-height:1.9;}
+.footer-copy span{color:#e0604f;}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+  html{scroll-behavior:auto;}
+}
+
+@media(max-width:820px){
+  .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;}
+  h1{font-size:32px;}
+  .nav-burger{display:block;}
+  .nav-links{
+    display:none;position:fixed;top:64px;left:0;right:0;
+    background:#fff;border-bottom:1px solid var(--line);
+    flex-direction:column;padding:1.25rem 2rem;gap:1rem;z-index:999;
+    box-shadow:0 12px 24px rgba(22,32,42,0.08);
+  }
+  .nav-links.open{display:flex;}
+  .lang-switch{margin-left:auto;margin-right:.6rem;}
+  .stats-bar{gap:1.75rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">DS<span> AUTOMATION</span> ENGINEERING</div>
+  <div class="nav-links">
+    <a href="#hero" data-i18n="nav_start">START</a>
+    <a href="#skills" data-i18n="nav_skills">SKILLS</a>
+    <a href="#services" data-i18n="nav_services">USŁUGI</a>
+    <a href="#about" data-i18n="nav_about">O MNIE</a>
+    <a href="#projects" data-i18n="nav_projects">PROJEKTY</a>
+    <a href="#contact" data-i18n="nav_contact">KONTAKT</a>
+  </div>
+  <div class="lang-switch">
+    <a href="index.html" class="pixel-link" title="Wersja pixel art / Pixel art version">◼ PIXEL</a>
+    <button class="lang-btn active" data-lang="pl" onclick="applyLang('pl')" aria-label="Polski">PL</button>
+    <button class="lang-btn" data-lang="en" onclick="applyLang('en')" aria-label="English">EN</button>
+    <button class="lang-btn" data-lang="de" onclick="applyLang('de')" aria-label="Deutsch">DE</button>
+    <button class="lang-btn" data-lang="zh" onclick="applyLang('zh')" aria-label="中文">中文</button>
+  </div>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+</nav>
+
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tagline">DS Automation Engineering</div>
+        <div class="hero-hello" data-i18n="hero_hello">CZEŚĆ, JESTEM</div>
+        <h1>Damian <span class="accent">Suchodolski</span></h1>
+        <p class="hero-desc" data-i18n="hero_desc">13+ lat w automatyce przemysłowej.<br>Programuję <span class="hi">roboty KUKA / ABB / Fanuc</span>, sterowniki <span class="hi">Siemens S7-1500</span><br>i systemy wizyjne <span class="hi">Keyence</span>.<br><br>VIBN • uruchomienia • optymalizacja • safety.<br>Obecnie: projekt Mercedes VAN EA, Vitoria (ES).</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn btn-primary" data-i18n="hero_btn1">► ZLEC PROJEKT</a>
+          <a href="#services" class="btn btn-outline" data-i18n="hero_btn2">◉ OFERTA</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="hero-badge" data-i18n="status_label">◉ STATUS: NA PROJEKCIE</div>
+        <div class="hero-meta">
+          <b>PLC</b> · Siemens S7-1500 / TIA Portal<br>
+          <b>Roboty</b> · KUKA · ABB · Fanuc<br>
+          <b>Vision</b> · Keyence XG-X / LJ-X / IV<br>
+          <b>VIBN</b> · virtual commissioning<br>
+          <b>Safety</b> · F-CPU · SafeMove · SOT
+        </div>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div><span class="stat-num">13+</span><span class="stat-label" data-i18n="stat_years">LAT DOŚWIADCZENIA</span></div>
+      <div><span class="stat-num">30+</span><span class="stat-label" data-i18n="stat_projects">PROJEKTÓW</span></div>
+      <div><span class="stat-num">10+</span><span class="stat-label" data-i18n="stat_oem">MAREK OEM</span></div>
+      <div><span class="stat-num">7</span><span class="stat-label" data-i18n="stat_countries">KRAJÓW</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="brands-strip">
+  <div class="brands-title" data-i18n="brands_title">MARKI, Z KTÓRYMI PRACOWAŁEM PRZY PROJEKTACH</div>
+  <div class="brands-row">
+    <span class="brand-item">MERCEDES-BENZ</span>
+    <span class="brand-item">PORSCHE</span>
+    <span class="brand-item">AUDI</span>
+    <span class="brand-item">BMW</span>
+    <span class="brand-item">DAIMLER</span>
+    <span class="brand-item">NORTHVOLT</span>
+    <span class="brand-item">CONTINENTAL</span>
+    <span class="brand-item">HELLA</span>
+    <span class="brand-item">MAGNA</span>
+    <span class="brand-item">AURUBIS</span>
+    <span class="brand-item">AVANCIS</span>
+    <span class="brand-item">ALLGAIER</span>
+  </div>
+</div>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Tech stack</span>
+      <h2 class="section-title" data-i18n="skills_title">OBSZARY <span>EKSPERTYZY</span></h2>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="skill-name" data-i18n="skill1_name">PROGRAMOWANIE PLC</div>
+        <div class="skill-desc" data-i18n="skill1_desc">Siemens S7-300/400 (Step7) i S7-1200/1500 (TIA Portal), WinCC Advanced/Unified, safety (Distributed Safety, F-CPU), standardy Daimler Integra 6/7.</div>
+        <div class="skill-tags">
+          <span class="tag">S7-1500</span><span class="tag">TIA Portal</span><span class="tag">WinCC</span><span class="tag">Safety F-CPU</span><span class="tag">Integra 7</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-name" data-i18n="skill2_name">ROBOTY PRZEMYSŁOWE</div>
+        <div class="skill-desc" data-i18n="skill2_desc">12+ lat z robotami KUKA KR C2/C4/C5, ABB IRC5 (Multimove, SafeMove), Fanuc R-30iB. Offline: Delmia V5, RobotStudio, KUKA.Sim, RoboGuide.</div>
+        <div class="skill-tags">
+          <span class="tag blue">KUKA KRC4/C5</span><span class="tag blue">ABB IRC5</span><span class="tag blue">Fanuc R-30iB</span><span class="tag blue">Delmia V5</span><span class="tag blue">SafeMove</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-name" data-i18n="skill3_name">SYSTEMY WIZYJNE</div>
+        <div class="skill-desc" data-i18n="skill3_desc">Systemy wizyjne Keyence: kamery XG-X, profilometry LJ-X, czujniki IV2/IV3, VS. Korekcja pozycji robota przez kamerę, inspekcja jakości.</div>
+        <div class="skill-tags">
+          <span class="tag amber">Keyence XG-X</span><span class="tag amber">LJ-X</span><span class="tag amber">IV2/IV3</span><span class="tag amber">VS</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-name" data-i18n="skill4_name">SOFTWARE & IT</div>
+        <div class="skill-desc" data-i18n="skill4_desc">Java (Spring Boot, REST, Android), Python, C++, SQL (MySQL, MS SQL, PostgreSQL). Łączę świat automatyki ze światem IT.</div>
+        <div class="skill-tags">
+          <span class="tag">Java / Spring</span><span class="tag">Python</span><span class="tag">C++</span><span class="tag">SQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="services_tag">// OFERTA_USŁUG</span>
+      <h2 class="section-title" data-i18n="services_title">CO MOGĘ <span>DLA CIEBIE</span> ZROBIĆ?</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="svc-num">01</span>
+        <div class="service-title" data-i18n="svc1_title">PROGRAMOWANIE PLC</div>
+        <div class="service-desc" data-i18n="svc1_desc">Siemens S7-1200/1500 w TIA Portal oraz S7-300/400 w Step7. Programy offline, debugging, optymalizacja i safety — w standardach OEM (Integra 6/7).</div>
+        <ul class="service-list" data-i18n="svc1_list">
+          <li>Programy offline do uruchomienia</li>
+          <li>Safety: Distributed Safety, F-CPU</li>
+          <li>Optymalizacja cyklu i diagnostyka</li>
+          <li>Wizualizacja WinCC Advanced/Unified</li>
+          <li>Uruchomienie i wsparcie produkcji</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="svc-num">02</span>
+        <div class="service-title" data-i18n="svc2_title">ROBOTY PRZEMYSŁOWE</div>
+        <div class="service-desc" data-i18n="svc2_desc">KUKA, ABB, Fanuc — od programowania offline, przez uruchomienie linii, po optymalizację czasu cyklu i koordynację zespołu robotyków.</div>
+        <ul class="service-list" data-i18n="svc2_list">
+          <li>Zgrzewanie, klejenie, sealing, handling</li>
+          <li>Offline: Delmia V5, RobotStudio, KUKA.Sim</li>
+          <li>Multimove, RoboTeam, SafeMove</li>
+          <li>Korekcja pozycji przez kamerę, force control</li>
+          <li>Koordynacja zespołu robotyków</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="svc-num">03</span>
+        <div class="service-title" data-i18n="svc3_title">SYSTEMY WIZJI MASZYNOWEJ</div>
+        <div class="service-desc" data-i18n="svc3_desc">Wdrożenia systemów Keyence: inspekcja jakości, pomiary profilometrami, detekcja obecności, prowadzenie robota przez kamerę.</div>
+        <ul class="service-list" data-i18n="svc3_list">
+          <li>Kamery Keyence XG-X, czujniki IV2/IV3</li>
+          <li>Profilometry laserowe LJ-X</li>
+          <li>Korekcja pozycji robota (vision guidance)</li>
+          <li>Integracja z PLC i robotem</li>
+          <li>Kalibracja i walidacja</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="svc-num">04</span>
+        <div class="service-title" data-i18n="svc4_title">VIBN — WIRTUALNE URUCHOMIENIE</div>
+        <div class="service-desc" data-i18n="svc4_desc">Virtual commissioning: testowanie programów PLC i robotów na wirtualnym modelu linii zanim powstanie fizycznie. Mniej ryzyka, szybszy rozruch.</div>
+        <ul class="service-list" data-i18n="svc4_list">
+          <li>Wirtualne uruchomienie PLC (VIBN)</li>
+          <li>Symulacja linii i weryfikacja sekwencji</li>
+          <li>Testy safety przed rozruchem</li>
+          <li>Skrócenie czasu uruchomienia on-site</li>
+          <li>Doświadczenie: Mercedes VAN EA, Vitoria</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Whoami</span>
+      <h2 class="section-title" data-i18n="about_title">O <span>MNIE</span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="code-card">
+        <div class="code-bar">
+          <div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div>
+          <span class="code-title">damian@ds-automation:~$</span>
+        </div>
+        <div class="code-body" id="terminal-body" data-i18n="about_terminal">
+          <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">cat profil.json</span></span>
+          <span class="t-line t-comment">// wczytywanie...</span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-out">{</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"imie": <span class="t-str">"Damian Suchodolski"</span>,</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"baza": <span class="t-str">"Gdańsk / cała Europa"</span>,</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"doswiadczenie_lat": <span class="t-val">13</span>,</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"wyksztalcenie": <span class="t-str">"mgr inż. Automatyka i Robotyka"</span>,</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"jezyki": [<span class="t-str">"PL"</span>, <span class="t-str">"EN-B2"</span>, <span class="t-str">"DE"</span>],</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"obecny_projekt": <span class="t-str">"Mercedes VAN EA, Vitoria"</span>,</span></span>
+          <span class="t-line"><span class="t-out">&nbsp;&nbsp;"hobby": [<span class="t-str">"kitesurfing"</span>, <span class="t-str">"scuba"</span>, <span class="t-str">"karate"</span>]</span></span>
+          <span class="t-line"><span class="t-out">}</span></span>
+          <span class="t-line">&nbsp;</span>
+          <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cursor"></span></span>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2012 – 2016</div>
+          <div class="tl-title" data-i18n="tl1_title">PROGRAMISTA ROBOTÓW — RW SWISS / DELTA AUTOMATION</div>
+          <div class="tl-desc" data-i18n="tl1_desc">Uruchamianie linii zrobotyzowanych KUKA KR C4 — online i offline w Delmia V5. Projekty Daimler Bremen, Tuscaloosa (USA), East London (RPA). Koordynacja zespołu robotyków.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:var(--acc2);"></div>
+          <div class="tl-year" style="color:var(--acc2);">2016 – 2020</div>
+          <div class="tl-title" data-i18n="tl2_title">PROGRAMISTA ROBOTÓW — VESCON AUTOMATION GMBH</div>
+          <div class="tl-desc" data-i18n="tl2_desc">Uruchamianie linii KUKA KR C4 i ABB IRC5 dla Porsche, Audi, Daimler. Optymalizacja czasu cyklu, safety, lider zespołu robotyków (Porsche PO992, Audi Neckarsulm).</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:var(--warn);"></div>
+          <div class="tl-year" style="color:var(--warn);">2020 – 2024</div>
+          <div class="tl-title" data-i18n="tl3_title">PROGRAMISTA PLC & ROBOTÓW — NOVAROB GMBH / NORTHVOLT</div>
+          <div class="tl-desc" data-i18n="tl3_desc">KUKA, ABB, Fanuc + PLC S7-1500 (TIA Portal) + wizja Keyence. Wirtualne i online uruchomienia. W Northvolt Gdańsk: debugging i optymalizacja PLC linii magazynów energii.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="border-color:#d64545;"></div>
+          <div class="tl-year" style="color:#d64545;" data-i18n="tl4_year">TERAZ</div>
+          <div class="tl-title" data-i18n="tl4_title">FREELANCER — PROGRAMISTA PLC, PROJEKT MERCEDES VAN EA</div>
+          <div class="tl-desc" data-i18n="tl4_desc">Vitoria (Hiszpania): VIBN, programy offline PLC S7-1500, uruchomienie, optymalizacja i safety w standardzie Integra 7.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Portfolio</span>
+      <h2 class="section-title" data-i18n="projects_title">WYBRANE <span>PROJEKTY</span></h2>
+    </div>
+    <div class="grid-2" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+      <div class="card proj-card">
+        <div class="project-type">PLC + VIBN + SAFETY</div>
+        <div class="project-name">MERCEDES VAN EA — VITORIA (ES)</div>
+        <div class="project-desc" data-i18n="proj1_desc">Wirtualne uruchomienie (VIBN), programy offline PLC S7-1500, rozruch, optymalizacja i safety. Standard Integra 7. Projekt w trakcie.</div>
+      </div>
+      <div class="card proj-card c2">
+        <div class="project-type">ROBOT + SAFETY + TEAM LEAD</div>
+        <div class="project-name">PORSCHE PO992 — ZUFFENHAUSEN</div>
+        <div class="project-desc" data-i18n="proj2_desc">Uruchomienie linii karoserii, optymalizacja procesu i czasu cyklu, funkcje safety robotów ABB IRC5, koordynacja zespołu robotyków.</div>
+      </div>
+      <div class="card proj-card c3">
+        <div class="project-type">PLC + ROBOT + VISION</div>
+        <div class="project-name">NORTHVOLT — GDAŃSK</div>
+        <div class="project-desc" data-i18n="proj3_desc">Linia produkcji magazynów energii: debugging i optymalizacja PLC S7-1500, optymalizacja programów Fanuc R-30iB, wizja Keyence XG-X / IV3.</div>
+      </div>
+    </div>
+
+    <button class="projlog-toggle" id="projlog-toggle" onclick="toggleProjlog()" data-i18n="projlog_btn">► PEŁNY LOG PROJEKTÓW [28]</button>
+    <div class="projlog" id="projlog">
+      <span class="pl-line"><b>Mercedes VAN EA</b> — Vitoria (ES) · S7-1500 · VIBN · safety · Integra 7</span>
+      <span class="pl-line"><b>Northvolt</b> — Gdańsk (PL) · energy storage line · S7-1500 · Fanuc · Keyence</span>
+      <span class="pl-line"><b>Continental</b> — DE / RS / CZ · car display production lines</span>
+      <span class="pl-line"><b>Daimler</b> — Düsseldorf · Sprinter body sealing line · KUKA</span>
+      <span class="pl-line"><b>Porsche AG</b> — Stuttgart · new Boxster integration · body shop</span>
+      <span class="pl-line"><b>Linde+Wiemann</b> — spot welding line · ABB IRC5 Multimove</span>
+      <span class="pl-line"><b>Aurubis</b> — Hamburg · copper anode mold cleaning · robots</span>
+      <span class="pl-line"><b>Eichenhauer</b> — car heating parts line · KUKA KR C4</span>
+      <span class="pl-line"><b>Hella</b> — Lippstadt · Porsche headlamp assembly · ABB IRC5 Multimove</span>
+      <span class="pl-line"><b>Daimler AG</b> — Bremen · new model on sealing line · KUKA KR C4</span>
+      <span class="pl-line"><b>Prinz Kinematics</b> — trunk hinge line · ABB IRC5 Multimove + TIA Portal</span>
+      <span class="pl-line"><b>Daimler AG</b> — Sindelfingen · door sealing line · KUKA KR C4</span>
+      <span class="pl-line"><b>Daimler AG</b> — Sindelfingen · armored door line · KUKA KR C2</span>
+      <span class="pl-line"><b>Avancis</b> — Torgau · photovoltaic panel line · ABB IRC5</span>
+      <span class="pl-line"><b>Mercedes-Benz AG</b> — Bremen · door rubber assembly · KUKA KR C4</span>
+      <span class="pl-line"><b>Daimler Powertrain</b> — battery production line · KUKA KR C4</span>
+      <span class="pl-line"><b>FFT / Daimler</b> — Vario Picker prototype · Integra Wave 6 · KUKA KR C4</span>
+      <span class="pl-line"><b>Audi Sport</b> — Heilbronn AU513 · line launch · KUKA VKR C4</span>
+      <span class="pl-line"><b>Porsche</b> — Zuffenhausen PO992 · launch · cycle time · safety · team lead · ABB IRC5</span>
+      <span class="pl-line"><b>Porsche</b> — Zuffenhausen PO992 · reference line launch · ABB IRC5</span>
+      <span class="pl-line"><b>Audi</b> — Neckarsulm · commissioning · cycle time · ABB IRC5 / KUKA VKR C4</span>
+      <span class="pl-line"><b>Audi</b> — Neckarsulm · line commissioning · team coordination · ABB IRC5</span>
+      <span class="pl-line"><b>Audi</b> — Neckarsulm · "Flex Grip" prototype line · KUKA RoboTeam</span>
+      <span class="pl-line"><b>Porsche</b> — Ludwigsburg · laser soldering pilot line · KUKA · training + docs</span>
+      <span class="pl-line"><b>Magna</b> — Albersdorf · BMW G30 hood line · KUKA KR C4</span>
+      <span class="pl-line"><b>Allgaier</b> — Uhingen · DAG S213 trunk lid line · KUKA KR C4</span>
+      <span class="pl-line"><b>Magna</b> — Heilbronn AU49x · launch to SOP · robotics team lead</span>
+      <span class="pl-line"><b>Daimler BR205/BR253</b> — Bremen · launch to SOP / Tuscaloosa (USA) + East London (ZA) · offline Delmia V5</span>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Credentials</span>
+      <h2 class="section-title" data-i18n="certs_title">CERTYFIKATY <span>& SZKOLENIA</span></h2>
+    </div>
+    <div class="grid-2" style="grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:.85rem;">
+      <div class="card cert-card"><span class="cert-year">2021</span><div><div class="cert-name">Safety Start-Up — Safe Operation Technology 3.x KR C4</div><div class="cert-org">KUKA College, Braunschweig</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2021</span><div><div class="cert-name">Integra 6 qualification + S7-1500 / TIA Portal conversion</div><div class="cert-org">Daimler, Sindelfingen</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2020</span><div><div class="cert-name">Planning & implementing KR C4 with Integra Wave 6</div><div class="cert-org">Daimler, Sindelfingen</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2019</span><div><div class="cert-name">SIMATIC S7-300/400 Distributed Safety</div><div class="cert-org">Siemens, Łódź</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2019</span><div><div class="cert-name">SIMATIC S7-300/400 Programming — Advanced</div><div class="cert-org">Siemens</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2017</span><div><div class="cert-name">IRC5 SafeMove PRO + SafeMove & EPS</div><div class="cert-org">ABB, Friedberg</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2016</span><div><div class="cert-name">IRC5 VASS (VW robot standard) + improvement workshops</div><div class="cert-org">ABB, Neckarsulm / Friedberg</div></div></div>
+      <div class="card cert-card"><span class="cert-year">2014</span><div><div class="cert-name">Robot Programming 1</div><div class="cert-org">KUKA College, Gersthofen</div></div></div>
+      <div class="card cert-card"><span class="cert-year">SEP</span><div><div class="cert-name">Electrical qualification ≤ 1 kV (operation & supervision)</div><div class="cert-org">SEP, Poland</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Workflow</span>
+      <h2 class="section-title" data-i18n="proc_title">JAK WYGLĄDA <span>WSPÓŁPRACA</span>?</h2>
+    </div>
+    <div class="process-grid">
+      <div class="card proc-step">
+        <span class="proc-num">01</span>
+        <div class="proc-name" data-i18n="proc1_name">KONTAKT</div>
+        <div class="proc-desc" data-i18n="proc1_desc">Napisz lub zadzwoń — omówimy potrzeby i zakres projektu.</div>
+      </div>
+      <div class="card proc-step">
+        <span class="proc-num">02</span>
+        <div class="proc-name" data-i18n="proc2_name">WYCENA 48H</div>
+        <div class="proc-desc" data-i18n="proc2_desc">Konkretna oferta z zakresem prac i terminem realizacji.</div>
+      </div>
+      <div class="card proc-step">
+        <span class="proc-num">03</span>
+        <div class="proc-name" data-i18n="proc3_name">REALIZACJA</div>
+        <div class="proc-desc" data-i18n="proc3_desc">Offline, VIBN, uruchomienie na obiekcie — z raportami postępu.</div>
+      </div>
+      <div class="card proc-step">
+        <span class="proc-num">04</span>
+        <div class="proc-name" data-i18n="proc4_name">WSPARCIE</div>
+        <div class="proc-desc" data-i18n="proc4_desc">Dokumentacja, szkolenie zespołu, wsparcie produkcji.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag" data-i18n="contact_tag">// KONTAKT</span>
+      <h2 class="section-title" data-i18n="contact_title">ZACZNIJMY <span>WSPÓŁPRACĘ</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro" data-i18n="contact_intro">Masz projekt? Potrzebujesz szybkiej wyceny?<br>Skontaktuj się — odpowiem w ciągu 24h.</p>
+
+        <div class="contact-box">
+          <div class="contact-icon">📧</div>
+          <div>
+            <div class="contact-label">EMAIL</div>
+            <div class="contact-val"><a href="mailto:damiansuchodolski88@gmail.com">damiansuchodolski88@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-box">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-label" data-i18n="contact_phone_label">TELEFON</div>
+            <div class="contact-val"><a href="tel:+48887020666">+48 887 020 666</a></div>
+          </div>
+        </div>
+        <div class="contact-box">
+          <div class="contact-icon">🌍</div>
+          <div>
+            <div class="contact-label" data-i18n="contact_loc_label">LOKALIZACJA</div>
+            <div class="contact-val" data-i18n="contact_loc_val">Gdańsk (Banino) — projekty w całej Europie</div>
+          </div>
+        </div>
+        <div class="contact-box">
+          <div class="contact-icon">💬</div>
+          <div>
+            <div class="contact-label" data-i18n="contact_langs_label">JĘZYKI</div>
+            <div class="contact-val" data-i18n="contact_langs_val">Polski / English (B2) / Deutsch</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-label" data-i18n="status_label">◉ STATUS: NA PROJEKCIE</div>
+          <div class="status-note" data-i18n="status_detail">Obecnie: <span style="color:#fff;">Mercedes VAN EA, Vitoria (ES)</span> — zapytaj o dostępność na kolejne projekty</div>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="form_name">TWOJE IMIĘ</label>
+          <input class="form-input" type="text" name="name" placeholder="Jan Kowalski" data-i18n-ph="form_name_ph" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">EMAIL</label>
+          <input class="form-input" type="email" name="email" placeholder="jan@firma.pl" data-i18n-ph="form_email_ph" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="form_type">TYP PROJEKTU</label>
+          <select class="form-input" name="type" style="cursor:pointer;" data-i18n="form_options">
+            <option value="">-- wybierz --</option>
+            <option value="plc">Programowanie PLC</option>
+            <option value="robot">Integracja robota</option>
+            <option value="vision">System wizyjny</option>
+            <option value="vibn">VIBN / wirtualne uruchomienie</option>
+            <option value="inne">Inne</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="form_desc">OPIS PROJEKTU</label>
+          <textarea class="form-textarea" name="message" placeholder="Krótko opisz swój projekt lub problem..." data-i18n-ph="form_desc_ph"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;" data-i18n="form_submit">► WYŚLIJ ZAPYTANIE</button>
+        <div id="form-msg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">DS AUTOMATION ENGINEERING</span>
+  <p class="footer-copy" data-i18n="footer_copy">© 2026 DS Automation Engineering — Damian Suchodolski<br>
+  PLC · Roboty przemysłowe · Vision · VIBN | Zrobiony z <span>♥</span> i dużą ilością kawy ☕</p>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+  document.querySelector('.nav-links').classList.remove('open');
+}));
+</script>
+</body>
+</html>
