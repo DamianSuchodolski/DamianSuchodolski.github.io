@@ -1,7 +1,8 @@
 /**
- * Generator statycznych stron SEO per zawód + sitemap.xml.
+ * Generator statycznych stron SEO per zawód.
  * Uruchomienie:  node cv-generator/tools/build-zawody.js
- * Wyjście:       cv-generator/zawody/<slug>.html, cv-generator/sitemap.xml
+ * Wyjście:       cv-generator/zawody/<slug>.html
+ * (sitemap.xml generuje build-kraje.js — obejmuje zawody i kraje)
  *
  * BASE_URL zmień przed wdrożeniem na docelową domenę!
  */
@@ -160,23 +161,9 @@ function pageHtml(key, z) {
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-const urls = [
-  `${BASE_URL}/index.html`,
-  `${BASE_URL}/kreator.html`
-];
-
 for (const [key, z] of Object.entries(ZAWODY)) {
   const file = path.join(outDir, `${z.slug}.html`);
   fs.writeFileSync(file, pageHtml(key, z), 'utf8');
-  urls.push(`${BASE_URL}/zawody/${z.slug}.html`);
   console.log('OK', path.relative(root, file));
 }
-
-const today = new Date().toISOString().slice(0, 10);
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
-</urlset>
-`;
-fs.writeFileSync(path.join(root, 'sitemap.xml'), sitemap, 'utf8');
-console.log('OK sitemap.xml (' + urls.length + ' adresów)');
+console.log('Pamiętaj: sitemap.xml generuje build-kraje.js');

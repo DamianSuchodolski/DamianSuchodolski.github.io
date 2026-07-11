@@ -22,6 +22,8 @@
       <select id="countrySelect">
         <option value="pl">🇵🇱 Polska</option>
         <option value="de">🇩🇪 Niemcy</option>
+        <option value="at">🇦🇹 Austria</option>
+        <option value="ch">🇨🇭 Szwajcaria</option>
         <option value="uk">🇬🇧 Wielka Brytania</option>
         <option value="us">🇺🇸 USA</option>
         <option value="es">🇪🇸 Hiszpania</option>
@@ -67,6 +69,11 @@
 
   <!-- ===================== FORM ===================== -->
   <section class="form-panel" id="formPanel">
+
+    <details class="kraj-panel" id="krajPanel">
+      <summary>📋 Standardy CV: <strong id="krajPanelName">Polska</strong> — co musi być, czego unikać</summary>
+      <div id="krajPanelBody"></div>
+    </details>
 
     <fieldset class="fgroup fgroup-zawod">
       <legend>🎯 Twój zawód</legend>
@@ -121,6 +128,8 @@
           <label>Data urodzenia <input type="date" data-field="personal.birth"></label>
           <label>Miejsce urodzenia <input type="text" data-field="personal.birthPlace" placeholder="Warszawa"></label>
         </div>
+      </div>
+      <div id="signCityRow" hidden>
         <div class="frow">
           <label style="flex:1">Miejscowość do podpisu (stopka Lebenslauf)
             <input type="text" data-field="personal.signCity" placeholder="Berlin"></label>
@@ -263,6 +272,7 @@
 <script src="js/leads.js"></script>
 <script src="js/ai.js"></script>
 <script src="js/zawody.js"></script>
+<script src="js/kraje.js"></script>
 <script src="js/kreator.js"></script>
 </body>
 </html>

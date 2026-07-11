@@ -219,6 +219,22 @@ textarea { resize: vertical; }
 }
 .level-picker button.on { background: var(--accent); border-color: var(--accent); }
 
+/* ---------- Panel standardów kraju ---------- */
+.kraj-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: .9rem 1.2rem;
+}
+.kraj-panel summary { cursor: pointer; font-size: .9rem; color: var(--ink-soft); }
+.kraj-panel summary strong { color: var(--ink); }
+.kraj-facts { margin: .8rem 0; font-size: .82rem; }
+.kraj-facts dt { font-weight: 700; margin-top: .5rem; }
+.kraj-facts dd { margin: .1rem 0 0 0; color: var(--ink-soft); }
+.kraj-panel h4 { font-size: .82rem; margin: .8rem 0 .3rem; }
+.kraj-list { list-style: none; font-size: .8rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: .3rem; }
+
 /* ---------- Zawód — podpowiedzi ---------- */
 .fgroup-zawod { border: 2px solid var(--accent); }
 .sugg-block { margin-top: 1rem; }

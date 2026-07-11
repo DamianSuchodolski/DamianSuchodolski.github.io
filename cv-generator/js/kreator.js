@@ -88,6 +88,42 @@
       photoBlocked: true,
       watermark: 'Created with <strong>CVTurbo</strong>'
     },
+    at: {
+      name: 'Austria',
+      headings: { contact: 'Kontakt', skills: 'Kenntnisse', languages: 'Sprachen',
+        about: 'Profil', experience: 'Berufserfahrung', education: 'Ausbildung' },
+      current: 'heute',
+      dateSep: '.',
+      native: 'Muttersprache',
+      aiLang: 'German (Austria)',
+      aiLabel: 'niemiecki',
+      hasClause: false,
+      clause: '',
+      extraFields: true,
+      signature: true,
+      photoHint: 'ℹ️ W Austrii zdjęcie jest zwyczajowe (AMS zaleca uśmiechnięty półportret na spokojnym tle), ' +
+        'ale nieobowiązkowe. Nie podawaj danych wrażliwych: religii, poglądów, stanu zdrowia.',
+      photoBlocked: false,
+      watermark: 'Erstellt mit <strong>CVTurbo</strong>'
+    },
+    ch: {
+      name: 'Szwajcaria',
+      headings: { contact: 'Kontakt', skills: 'Kenntnisse', languages: 'Sprachen',
+        about: 'Profil', experience: 'Berufserfahrung', education: 'Aus- und Weiterbildung' },
+      current: 'heute',
+      dateSep: '.',
+      native: 'Muttersprache',
+      aiLang: 'Swiss Standard German (use "ss" instead of "ß", Swiss terminology like Zivilstand)',
+      aiLabel: 'niemiecki (Szwajcaria)',
+      hasClause: false,
+      clause: '',
+      extraFields: true,
+      signature: false,
+      photoHint: 'ℹ️ W Szwajcarii zdjęcie jest powszechne i dobrze widziane (opcjonalne). Obcokrajowcu: ' +
+        'podaj narodowość i status zezwolenia na pracę (B/C) — np. w podsumowaniu zawodowym.',
+      photoBlocked: false,
+      watermark: 'Erstellt mit <strong>CVTurbo</strong>'
+    },
     es: {
       name: 'Hiszpania',
       headings: { contact: 'Contacto', skills: 'Habilidades', languages: 'Idiomas',
@@ -199,12 +235,36 @@
     var C = country();
     countrySelect.value = state.country;
     $('#extraFields').hidden = !C.extraFields;
+    $('#signCityRow').hidden = !C.signature;
     $('#clauseGroup').hidden = !C.hasClause;
     $('#photoHint').textContent = C.photoHint;
     if (!state.clauseCustom) {
       state.clause = C.clause;
       $('#clauseField').value = C.clause;
     }
+    renderKrajPanel();
+  }
+
+  function renderKrajPanel() {
+    var K = (window.CVTURBO_KRAJE || {})[state.country];
+    var panel = $('#krajPanel');
+    if (!K) { panel.hidden = true; return; }
+    panel.hidden = false;
+    $('#krajPanelName').textContent = K.flag + ' ' + K.name;
+    $('#krajPanelBody').innerHTML =
+      '<dl class="kraj-facts">' +
+        '<dt>📄 Dokument</dt><dd>' + esc(K.docName) + ' · ' + esc(K.dlugosc) + '</dd>' +
+        '<dt>📷 Zdjęcie</dt><dd>' + esc(K.zdjecie) + '</dd>' +
+        '<dt>👤 Dane osobowe</dt><dd>' + esc(K.dane) + '</dd>' +
+        '<dt>🔒 Klauzula</dt><dd>' + esc(K.klauzula) + '</dd>' +
+        '<dt>✍️ Podpis</dt><dd>' + esc(K.podpis) + '</dd>' +
+      '</dl>' +
+      '<h4>Wskazówki</h4><ul class="kraj-list">' +
+        K.wskazowki.map(function (w) { return '<li>💡 ' + esc(w) + '</li>'; }).join('') +
+      '</ul>' +
+      '<h4>Najczęstsze błędy</h4><ul class="kraj-list">' +
+        K.bledy.map(function (b) { return '<li>⚠️ ' + esc(b) + '</li>'; }).join('') +
+      '</ul>';
   }
 
   countrySelect.addEventListener('change', function () {
