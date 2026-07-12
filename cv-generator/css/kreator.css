@@ -305,6 +305,13 @@ textarea { resize: vertical; }
   display: flex;
   justify-content: center;
   overflow: hidden;
+  /* ochrona podglądu: bez zaznaczania/kopiowania treści kartki */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media print {
+  .preview-panel { user-select: auto; } /* druk (oficjalny przepływ) bez ograniczeń */
 }
 .preview-scale { transform-origin: top center; }
 

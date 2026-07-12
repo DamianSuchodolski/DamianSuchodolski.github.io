@@ -790,6 +790,25 @@
     });
   });
 
+  /* ==================== Ochrona podglądu ==================== */
+  // Blokada kopiowania i menu kontekstowego na kartce CV (formularz działa
+  // normalnie). PrintScreen to funkcja systemu — przeglądarka nie może go
+  // zablokować; realną ochroną jest watermark będący częścią kartki.
+
+  var previewPanel = document.querySelector('.preview-panel');
+  ['copy', 'cut', 'contextmenu', 'dragstart'].forEach(function (evt) {
+    previewPanel.addEventListener(evt, function (e) { e.preventDefault(); });
+  });
+
+  // Ctrl+P / Cmd+P nie może omijać lejka (e-mail + blokada szablonów PRO) —
+  // kierujemy na oficjalny przepływ pobierania.
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+      e.preventDefault();
+      $('#downloadBtn').click();
+    }
+  });
+
   /* ==================== Pobieranie PDF ==================== */
 
   $('#downloadBtn').addEventListener('click', function () {

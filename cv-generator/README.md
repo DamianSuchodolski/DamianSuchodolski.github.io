@@ -191,6 +191,12 @@ create policy "anon insert only" on leads for insert to anon with check (true);
   w frazę wstawi polski tekst (do rozwiązania przy wielojęzycznym UI).
 - PDF przez okno druku przeglądarki (window.print) — jakość zależna od
   przeglądarki; dedykowany render PDF w ROADMAP F2.
+- Ochrona podglądu: zablokowane kopiowanie/zaznaczanie/menu kontekstowe na
+  kartce CV oraz Ctrl+P (kierowany na oficjalny lejek pobierania).
+  **Zrzutów ekranu (PrintScreen) nie da się zablokować z poziomu przeglądarki**
+  — to funkcja systemu operacyjnego; realną ochroną modelu Free/PRO jest
+  watermark będący częścią kartki (trafia na każdy zrzut) oraz nakładka
+  na szablonach PRO.
 
 ## Testowanie (ręczna checklista przepływów)
 
