@@ -28,8 +28,11 @@ koszyk (nowe funkcje).
 - [ ] **Polityka prywatności** (administrator danych, cel, podstawa prawna,
       odbiorcy: Supabase/Anthropic, prawa użytkownika) + podlinkowanie w stopce
       i przy każdym formularzu e-mail
-- [ ] **Regulamin sprzedaży PRO** (odstąpienie od umowy, gwarancja zwrotu 7 dni —
-      obiecana w produkcie!)
+- [ ] **Regulamin sprzedaży PRO**: (a) checkbox przy zakupie — zgoda na
+      natychmiastowe dostarczenie treści cyfrowej + utrata ustawowego prawa
+      odstąpienia (art. 38 pkt 13 ustawy o prawach konsumenta), (b) dobrowolna
+      gwarancja warunkowa: 14 dni na zwrot, O ILE funkcje PRO nie zostały
+      użyte (brak tłumaczenia AI / pobrania PDF bez stopki)
 - [ ] Rejestr czynności przetwarzania (prosty dokument wewnętrzny)
 - Decyzja: sprzedaż jako działalność (nierejestrowana do limitu / JDG) — sprawdzić
   próg i fakturowanie
@@ -52,11 +55,16 @@ koszyk (nowe funkcje).
       strona `dziekujemy.html?kod=...` z kodem odblokowującym → użytkownik
       wpisuje kod w kreatorze → flaga PRO + zapis kodu
 - [ ] Weryfikacja kodu: minimum — lista jednorazowych kodów w Supabase
-      (tabela `pro_codes`: code, email, used_at); ai-server dostaje endpoint
-      `/api/redeem` sprawdzający kod (twardsza blokada niż localStorage)
+      (tabela `pro_codes`: code, email, used_at, `translated_at`,
+      `pdf_downloaded_at` — kolumny użycia zasilają procedurę zwrotów);
+      ai-server dostaje endpoint `/api/redeem` sprawdzający kod
+      (twardsza blokada niż localStorage)
 - [ ] E-mail po zakupie (potwierdzenie + kod) — na start ręcznie/Zapier,
       docelowo webhook Stripe → funkcja
-- [ ] Obsługa zwrotów (proces ręczny, 7 dni — zgodnie z obietnicą)
+- [ ] Obsługa zwrotów: przy zgłoszeniu sprawdź użycie kodu w `pro_codes`
+      (kolumny `translated_at`, `pdf_downloaded_at`) — kod nieużyty → refund
+      w Stripe od ręki; użyty → odmowa zgodna z regulaminem. Zwrot zawsze
+      lepszy niż chargeback (kara Stripe + ryzyko konta).
 
 ### 1.4 Lead magnet (obiecany na landingu!)
 - [ ] Napisać poradnik **„10 błędów, przez które CV ląduje w koszu"** (PDF,

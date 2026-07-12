@@ -10,7 +10,7 @@ w przeglądarce, dane CV użytkownika **nie opuszczają jego urządzenia**
 | Plan | Cena | Zawartość |
 |---|---|---|
 | Darmowy | 0 zł | kreator + podgląd A4, szablon „Nowoczesny", PDF ze stopką CVTurbo |
-| PRO | 19 zł (jednorazowo, promocja startowa; docelowo 39 zł) | Tłumacz AI, wszystkie szablony, bez stopki, kolor przewodni, 7 dni gwarancji zwrotu |
+| PRO | 19 zł (jednorazowo, promocja startowa; docelowo 39 zł) | Tłumacz AI, wszystkie szablony, bez stopki, kolor przewodni, warunkowa gwarancja zwrotu (14 dni, o ile funkcje PRO nieużyte) |
 
 Leady e-mail zbierane w 3 miejscach (pole `source`):
 `lead-magnet-poradnik` (landing), `download-pdf` (przed pobraniem), `pro-intent` (chęć zakupu PRO — najgorętsze leady).
@@ -129,7 +129,8 @@ w kreatorze i strony `kraje/*.html` (ze źródłami w stopce).
 Szablony PRO **nie są zablokowane** — renderują się na CV użytkownika
 z nakładką `.cv-pro-overlay` („PODGLĄD PRO" + przycisk odblokowania).
 Pobranie PDF przy aktywnym szablonie PRO otwiera modal oferty zamiast druku.
-Modal: miniatury szablonów, kotwica 39→19 zł, gwarancja zwrotu 7 dni,
+Modal: miniatury szablonów, kotwica 39→19 zł, warunkowa gwarancja zwrotu
+(14 dni, tylko jeśli funkcje PRO nieużyte — chroni przed „pobiorę i zwrócę"),
 e-mail = rezerwacja ceny startowej (lead `pro-intent`).
 
 ### Tłumacz AI (funkcja PRO)
