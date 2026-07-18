@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreator CV — CVTurbo</title>
+<meta name="description" content="Kreator CV online z podglądem na żywo. Wypełnij formularz i pobierz profesjonalne CV w PDF.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kreator.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="nav-logo">CV<span>Turbo</span></a>
+
+  <div class="topbar-controls">
+    <label class="control">
+      <span>Kraj CV</span>
+      <select id="countrySelect">
+        <option value="pl">🇵🇱 Polska</option>
+        <option value="de">🇩🇪 Niemcy</option>
+        <option value="at">🇦🇹 Austria</option>
+        <option value="ch">🇨🇭 Szwajcaria</option>
+        <option value="uk">🇬🇧 Wielka Brytania</option>
+        <option value="us">🇺🇸 USA</option>
+        <option value="es">🇪🇸 Hiszpania</option>
+      </select>
+    </label>
+    <label class="control">
+      <span>Szablon</span>
+      <select id="templateSelect">
+        <option value="modern">Nowoczesny (darmowy)</option>
+        <option value="classic">Klasyczny 🔒 PRO</option>
+        <option value="minimal">Minimalistyczny 🔒 PRO</option>
+      </select>
+    </label>
+    <label class="control control-color" id="accentControl" title="Kolor przewodni (PRO)">
+      <span>Kolor</span>
+      <input type="color" id="accentColor" value="#2563eb">
+    </label>
+    <button type="button" class="btn-ghost btn-ai" id="aiTranslateBtn"
+      title="Przetłumacz całe CV na język wybranego kraju">🤖 Tłumacz AI <span class="mini-pro">PRO</span></button>
+    <button type="button" class="btn-ghost btn-ai" id="coverBtn"
+      title="Wygeneruj list motywacyjny pod Twoje CV i konkretną ofertę">✉️ List motyw. <span class="mini-pro mini-pakiet">PAKIET</span></button>
+    <div class="control control-data">
+      <button type="button" class="btn-ghost" id="exportJson" title="Zapisz kopię danych CV do pliku">💾 Kopia</button>
+      <button type="button" class="btn-ghost" id="importJson" title="Wczytaj dane CV z pliku">📂 Wczytaj</button>
+      <input type="file" id="importFile" accept=".json" hidden>
+    </div>
+  </div>
+
+  <div class="topbar-actions">
+    <button type="button" class="btn btn-gold" id="proBtn">⭐ PRO — 19 zł</button>
+    <button type="button" class="btn btn-primary" id="downloadBtn">Pobierz PDF ⬇</button>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">Twoje CV jest gotowe w <strong id="progressPct">0%</strong></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <details class="checker" id="checker">
+    <summary>✅ Dobre praktyki: <strong id="checkerScore">0/0</strong> — zobacz, co poprawić, żeby CV było skuteczne</summary>
+    <ul id="checkerList" class="checker-list"></ul>
+  </details>
+</div>
+
+<main class="workspace">
+
+  <!-- ===================== FORM ===================== -->
+  <section class="form-panel" id="formPanel">
+
+    <details class="kraj-panel" id="krajPanel">
+      <summary>📋 Standardy CV: <strong id="krajPanelName">Polska</strong> — co musi być, czego unikać</summary>
+      <div id="krajPanelBody"></div>
+    </details>
+
+    <div class="import-bar">
+      <div>
+        <strong>Masz już CV?</strong> Zrób zdjęcie albo wybierz plik (PDF/JPG) —
+        wypełnimy formularz za Ciebie. <span class="import-free">Za darmo</span>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="importBtn">📸 Wczytaj stare CV</button>
+      <input type="file" id="importCvFile" accept="image/*,application/pdf" hidden>
+    </div>
+
+    <fieldset class="fgroup fgroup-zawod">
+      <legend>🎯 Twój zawód</legend>
+      <label>Wybierz zawód, a podpowiemy Ci gotowe, skuteczne treści
+        <select id="zawodSelect">
+          <option value="">— inny / bez podpowiedzi —</option>
+        </select>
+      </label>
+      <div id="zawodPanel" hidden>
+        <div class="sugg-block">
+          <h4>💡 Wskazówki dla tego zawodu</h4>
+          <ul id="zawodTips" class="tips-list"></ul>
+        </div>
+        <div class="sugg-block">
+          <h4>Przykładowe podsumowanie <span class="sugg-note">(kliknij, aby wstawić — potem dopasuj)</span></h4>
+          <div id="zawodSummaries" class="sugg-list"></div>
+        </div>
+        <div class="sugg-block">
+          <h4>Umiejętności <span class="sugg-note">(kliknij, aby dodać)</span></h4>
+          <div id="zawodSkills" class="chip-list"></div>
+        </div>
+        <div class="sugg-block">
+          <h4>Frazy do opisu doświadczenia <span class="sugg-note">(kliknij — dopiszemy do ostatniego stanowiska; uzupełnij [X] liczbami)</span></h4>
+          <div id="zawodPhrases" class="sugg-list"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>👤 Dane osobowe</legend>
+      <div class="frow frow-2">
+        <label>Imię i nazwisko <input type="text" data-field="personal.name" placeholder="Jan Kowalski"></label>
+        <label>Stanowisko / tytuł <input type="text" data-field="personal.title" placeholder="Specjalista ds. sprzedaży"></label>
+      </div>
+      <div class="frow frow-2">
+        <label>E-mail <input type="email" data-field="personal.email" placeholder="jan@przyklad.pl"></label>
+        <label>Telefon <input type="tel" data-field="personal.phone" placeholder="+48 600 000 000"></label>
+      </div>
+      <div class="frow frow-2">
+        <label>Miasto <input type="text" data-field="personal.city" placeholder="Warszawa"></label>
+        <label>WWW / LinkedIn <input type="text" data-field="personal.www" placeholder="linkedin.com/in/jan"></label>
+      </div>
+      <div class="frow">
+        <label class="photo-label">Zdjęcie (opcjonalnie)
+          <input type="file" id="photoInput" accept="image/*">
+        </label>
+        <button type="button" class="btn-ghost btn-ghost-danger" id="photoRemove" hidden>Usuń zdjęcie</button>
+      </div>
+      <p class="field-hint" id="photoHint"></p>
+      <div id="extraFields" hidden>
+        <div class="frow frow-2">
+          <label>Data urodzenia <input type="date" data-field="personal.birth"></label>
+          <label>Miejsce urodzenia <input type="text" data-field="personal.birthPlace" placeholder="Warszawa"></label>
+        </div>
+      </div>
+      <div id="signCityRow" hidden>
+        <div class="frow">
+          <label style="flex:1">Miejscowość do podpisu (stopka Lebenslauf)
+            <input type="text" data-field="personal.signCity" placeholder="Berlin"></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>📝 Podsumowanie zawodowe</legend>
+      <label class="sr-only" for="summaryField">Podsumowanie</label>
+      <textarea id="summaryField" data-field="summary" rows="4"
+        placeholder="2–3 zdania o Tobie: kim jesteś, co potrafisz najlepiej i czego szukasz. To pierwsza rzecz, którą czyta rekruter."></textarea>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>💼 Doświadczenie zawodowe</legend>
+      <div id="expList" class="rep-list"></div>
+      <button type="button" class="btn-add" data-add="experience">+ Dodaj doświadczenie</button>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>🎓 Wykształcenie</legend>
+      <div id="eduList" class="rep-list"></div>
+      <button type="button" class="btn-add" data-add="education">+ Dodaj wykształcenie</button>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>🛠 Umiejętności</legend>
+      <div id="skillList" class="rep-list"></div>
+      <button type="button" class="btn-add" data-add="skills">+ Dodaj umiejętność</button>
+    </fieldset>
+
+    <fieldset class="fgroup">
+      <legend>🌍 Języki obce</legend>
+      <div id="langList" class="rep-list"></div>
+      <button type="button" class="btn-add" data-add="languages">+ Dodaj język</button>
+    </fieldset>
+
+    <fieldset class="fgroup" id="clauseGroup">
+      <legend>🔒 Klauzula RODO</legend>
+      <label class="check-row">
+        <input type="checkbox" id="clauseEnabled" checked>
+        <span>Dodaj klauzulę na końcu CV</span>
+      </label>
+      <textarea data-field="clause" rows="4" id="clauseField"></textarea>
+    </fieldset>
+
+  </section>
+
+  <!-- ===================== PREVIEW ===================== -->
+  <section class="preview-panel">
+    <div class="preview-scale" id="previewScale">
+      <div class="cv-page" id="cvPage"><!-- generated --></div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== MODALS ===================== -->
+
+<div class="modal-backdrop" id="downloadModal" hidden>
+  <div class="modal">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>Twoje CV jest gotowe! 🎉</h2>
+    <p>Podaj e-mail, na który mamy wysłać potwierdzenie i porady, jak zwiększyć skuteczność CV — a potem pobierz plik PDF.</p>
+    <form id="downloadForm">
+      <input type="email" id="dlEmail" placeholder="Twój adres e-mail" required>
+      <label class="consent">
+        <input type="checkbox" id="dlConsent" required>
+        <span>Zgadzam się na otrzymywanie porad rekrutacyjnych i informacji o CVTurbo na podany e-mail. Zgodę mogę wycofać w każdej chwili.</span>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Pobierz moje CV (PDF) ⬇</button>
+    </form>
+    <p class="modal-note">Treść Twojego CV nie jest nigdzie wysyłana — zapisujemy wyłącznie adres e-mail.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="proModal" hidden>
+  <div class="modal modal-pro">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="pro-badge">⭐ CVTurbo PRO · promocja startowa</div>
+    <h2>Twoje CV zasługuje na najlepszy szablon</h2>
+
+    <div class="pro-tpls" aria-hidden="true">
+      <div class="pro-tpl">
+        <div class="pt"><span class="pt-side"></span><span class="pt-lines"><i></i><i></i><i></i></span></div>
+        <b>Nowoczesny</b><span class="pt-have">✓ masz</span>
+      </div>
+      <div class="pro-tpl pro-tpl-locked">
+        <div class="pt pt-col"><span class="pt-head"></span><span class="pt-lines"><i></i><i></i><i></i></span></div>
+        <b>Klasyczny</b><span class="pt-lock">🔓 PRO</span>
+      </div>
+      <div class="pro-tpl pro-tpl-locked">
+        <div class="pt pt-col"><span class="pt-head pt-head-thin"></span><span class="pt-lines"><i></i><i></i><i></i></span></div>
+        <b>Minimalistyczny</b><span class="pt-lock">🔓 PRO</span>
+      </div>
+    </div>
+
+    <ul class="pro-list">
+      <li>🤖 <strong>Tłumacz AI</strong> — całe CV po niemiecku, angielsku lub hiszpańsku jednym kliknięciem</li>
+      <li>🎨 <strong>Wszystkie szablony</strong> — obecne i każdy nowy, bez dopłat</li>
+      <li>🧹 <strong>Czysty dokument</strong> — bez stopki CVTurbo, w 100% Twój</li>
+      <li>🎯 <strong>Kolor przewodni</strong> dopasowany do Twojej branży</li>
+      <li>♾️ <strong>Płacisz raz</strong> — dożywotnio, zero abonamentu</li>
+    </ul>
+
+    <div class="pro-price-row">
+      <div class="pro-price"><s>39 zł</s> <b>19 zł</b> <span>jednorazowo</span></div>
+      <div class="pro-guarantee">✅ 14 dni na zwrot, jeśli nie skorzystasz z funkcji PRO</div>
+    </div>
+
+    <div class="pakiet-hint" id="pakietHint">
+      ✈️ <strong>Pakiet „Praca za granicą" — 49 zł:</strong> wszystko z PRO
+      + listy motywacyjne AI + ściągi aplikowania w 7 krajach.
+      <button type="button" class="btn-ghost" id="pakietSelectBtn">Wybieram pakiet</button>
+    </div>
+
+    <form id="proForm">
+      <input type="email" id="proEmail" placeholder="Twój adres e-mail" required>
+      <button type="submit" class="btn btn-gold btn-block">Odblokuj PRO za 19 zł →</button>
+      <label class="consent">
+        <input type="checkbox" id="proConsent" required>
+        <span>Zgadzam się na kontakt e-mail w sprawie zakupu CVTurbo PRO oraz informacji o produkcie.</span>
+      </label>
+    </form>
+    <p class="modal-note" id="proFallbackNote">Uruchamiamy płatności — zostaw e-mail, a wyślemy Ci link do zakupu
+       i <strong>zagwarantujemy cenę startową 19 zł</strong> (docelowo 39 zł).</p>
+    <p class="modal-note" id="proThanks" hidden>✅ Cena 19 zł zarezerwowana dla Ciebie! Link do płatności wyślemy na podany adres.</p>
+
+    <details class="redeem-box" id="redeemBox">
+      <summary>🔑 Mam już kod aktywacyjny</summary>
+      <div class="redeem-row">
+        <input type="text" id="redeemInput" placeholder="np. CVT-XXXX-XXXX" autocomplete="off">
+        <button type="button" class="btn btn-primary" id="redeemBtn">Aktywuj</button>
+      </div>
+      <p class="modal-note" id="redeemStatus" hidden></p>
+    </details>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="aiModal" hidden>
+  <div class="modal">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>🤖 Tłumacz AI</h2>
+    <p>Przetłumaczymy całe CV — stanowisko, podsumowanie, doświadczenie, wykształcenie,
+       umiejętności i języki — na <strong id="aiTargetLang">…</strong>, z zachowaniem
+       terminologii branżowej Twojego zawodu.</p>
+    <button type="button" class="btn btn-primary btn-block" id="aiRunBtn">Przetłumacz moje CV →</button>
+    <p class="modal-note ai-status" id="aiStatus" hidden></p>
+    <button type="button" class="btn-ghost btn-block-ghost" id="aiUndoBtn" hidden>↩ Przywróć wersję sprzed tłumaczenia</button>
+    <p class="modal-note">Wysyłamy tylko treść CV — bez imienia, e-maila, telefonu i zdjęcia.
+       Oryginał zapisujemy na Twoim urządzeniu, więc zawsze możesz go przywrócić.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="importModal" hidden>
+  <div class="modal">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>📸 Wczytywanie CV</h2>
+    <p>Odczytujemy Twoje CV i wypełniamy formularz. Obecne dane w formularzu
+       zostaną zastąpione — zapisujemy ich kopię, więc możesz cofnąć.</p>
+    <p class="modal-note ai-status" id="importStatus">⏳ Analizuję dokument… to potrwa do minuty.</p>
+    <button type="button" class="btn-ghost btn-block-ghost" id="importUndoBtn" hidden>↩ Przywróć dane sprzed importu</button>
+    <p class="modal-note">Plik wysyłamy wyłącznie w celu odczytania treści — nie zapisujemy go.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="coverModal" hidden>
+  <div class="modal modal-wide">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>✉️ List motywacyjny</h2>
+    <p>Napiszemy list pod Twoje CV, w języku wybranego kraju
+       (<strong id="coverTargetLang">…</strong>), zgodnie z lokalnymi zwyczajami.</p>
+    <div class="frow frow-2">
+      <label>Firma (opcjonalnie) <input type="text" id="coverCompany" placeholder="np. Müller GmbH"></label>
+      <label>Stanowisko z ogłoszenia <input type="text" id="coverPosition" placeholder="np. Elektriker"></label>
+    </div>
+    <label class="cover-details-label">Szczegóły z ogłoszenia (opcjonalnie — im więcej, tym lepszy list)
+      <textarea id="coverDetails" rows="3" placeholder="Wklej fragment ogłoszenia lub wymagania…"></textarea>
+    </label>
+    <button type="button" class="btn btn-primary btn-block" id="coverRunBtn">Napisz list →</button>
+    <p class="modal-note ai-status" id="coverStatus" hidden></p>
+    <div id="coverResultWrap" hidden>
+      <textarea id="coverResult" rows="14"></textarea>
+      <div class="cover-actions">
+        <button type="button" class="btn-ghost" id="coverCopyBtn">📋 Kopiuj do schowka</button>
+        <span class="modal-note">Przejrzyj i dopasuj — list ma brzmieć jak Ty.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="share-toast" id="shareToast" hidden>
+  <span>💪 CV gotowe! Znasz kogoś z brygady, komu też się przyda?</span>
+  <a id="shareWhatsApp" class="btn btn-primary btn-sm" target="_blank" rel="noopener">Wyślij na WhatsApp</a>
+  <button type="button" class="share-close" id="shareClose">&times;</button>
+</div>
+
+<script src="js/leads.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/zawody.js"></script>
+<script src="js/kraje.js"></script>
+<script src="js/kreator.js"></script>
+</body>
+</html>

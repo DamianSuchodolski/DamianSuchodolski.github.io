@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator brutto-netto Niemcy 2026 — ile zarobisz na rękę | CVTurbo</title>
+<meta name="description" content="Policz, ile zostanie Ci na rękę z niemieckiej pensji: kalkulator brutto→netto (Steuerklasse I/III/IV), składki i podatek + orientacyjne stawki godzinowe w zawodach: spawacz, elektryk, hydraulik, kierowca.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<meta property="og:title" content="Kalkulator brutto-netto Niemcy 2026 — ile zarobisz na rękę">
+<meta property="og:description" content="Stawka godzinowa lub pensja brutto → wypłata netto w Niemczech. Plus widełki stawek w zawodach technicznych.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/landing.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Ile procent pensji brutto zabierają składki w Niemczech?","acceptedAnswer":{"@type":"Answer","text":"Pracownik płaci łącznie około 20% brutto na ubezpieczenia społeczne: emerytalne (9,3%), zdrowotne (7,3% + połowa składki dodatkowej kasy), pielęgnacyjne (ok. 1,8-2,4%) i od bezrobocia (1,3%). Do tego dochodzi podatek dochodowy zależny od Steuerklasse."}},
+{"@type":"Question","name":"Co to jest Steuerklasse?","acceptedAnswer":{"@type":"Answer","text":"Klasa podatkowa decydująca o zaliczce na podatek: I — osoby samotne, III — żonaty/zamężna gdy małżonek nie pracuje lub zarabia mało (najniższy podatek), IV — oboje małżonkowie pracują i zarabiają podobnie, V — druga klasa przy III u małżonka, VI — druga praca."}},
+{"@type":"Question","name":"Ile zarabia spawacz lub elektryk w Niemczech?","acceptedAnswer":{"@type":"Answer","text":"Orientacyjnie (2026): spawacz 15-21 €/h, elektryk 16-22 €/h, hydraulik 16-22 €/h, mechanik 15-20 €/h, kierowca C+E 14-18 €/h, pracownik budowlany 14-19 €/h. Stawki zależą od landu, doświadczenia i uprawnień."}}
+]}
+</script>
+<style>
+.calc-page { max-width: 800px; margin: 0 auto; padding: 3rem clamp(1rem, 4vw, 2rem); }
+.calc-box {
+  background: var(--bg-soft); border: 1px solid var(--border); border-radius: 20px;
+  padding: clamp(1.2rem, 4vw, 2rem); margin: 2rem 0;
+}
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+.calc-box label { display: flex; flex-direction: column; gap: .3rem; font-size: .82rem; font-weight: 600; color: var(--ink-soft); }
+.calc-box input, .calc-box select {
+  padding: .6rem .8rem; border: 1px solid var(--border); border-radius: 10px;
+  font-family: inherit; font-size: 1rem; background: #fff;
+}
+.calc-check { flex-direction: row !important; align-items: center; gap: .5rem !important; }
+.calc-result { background: #fff; border-radius: 14px; padding: 1.2rem; }
+.calc-result table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.calc-result td { padding: .35rem 0; border-bottom: 1px solid var(--bg-soft); }
+.calc-result td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.calc-net { font-size: 1.5rem; font-weight: 800; color: #16a34a; }
+.calc-note { font-size: .75rem; color: var(--ink-soft); margin-top: 1rem; }
+.wage-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 1rem 0 2rem; }
+.wage-table th, .wage-table td { padding: .55rem .7rem; border-bottom: 1px solid var(--border); text-align: left; }
+.wage-table th { background: var(--bg-soft); }
+.calc-page h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 1rem; }
+.calc-page h1 em { font-style: normal; color: var(--accent); }
+.calc-page h2 { font-size: 1.35rem; margin: 2.2rem 0 .8rem; }
+.calc-page > p { color: var(--ink-soft); }
+.calc-cta {
+  background: var(--ink); color: #fff; border-radius: 20px; text-align: center;
+  padding: 2.5rem 1.5rem; margin-top: 3rem;
+}
+.calc-cta h2 { margin-top: 0; }
+.calc-cta p { color: #cbd5e1; margin-bottom: 1.2rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../index.html" class="nav-logo">CV<span>Turbo</span></a>
+  <div class="nav-links">
+    <a href="../index.html#kraje">Kraje</a>
+    <a href="../kraje/cv-do-niemiec.html">CV do Niemiec</a>
+    <a href="../index.html#cennik">Cennik</a>
+  </div>
+  <a href="../kreator.html?country=de" class="btn btn-primary btn-sm">Stwórz CV</a>
+</nav>
+
+<article class="calc-page">
+  <p class="hero-eyebrow">🇩🇪 Praca w Niemczech</p>
+  <h1>Kalkulator brutto → netto <em>Niemcy 2026</em></h1>
+  <p>Wpisz stawkę godzinową albo pensję miesięczną brutto i zobacz, ile realnie
+     zostanie Ci na rękę po niemieckich składkach i podatku.</p>
+
+  <div class="calc-box">
+    <div class="calc-grid">
+      <label>Stawka godzinowa (€/h)
+        <input type="number" id="hourly" min="0" step="0.5" placeholder="np. 18">
+      </label>
+      <label>lub pensja miesięczna brutto (€)
+        <input type="number" id="monthly" min="0" step="50" placeholder="np. 3100">
+      </label>
+      <label>Klasa podatkowa (Steuerklasse)
+        <select id="taxclass">
+          <option value="1">I — samotny / samotna</option>
+          <option value="3">III — małżonek nie pracuje / zarabia mało</option>
+          <option value="4">IV — oboje pracują</option>
+        </select>
+      </label>
+      <label class="calc-check">
+        <input type="checkbox" id="church"> płacę podatek kościelny (9%)
+      </label>
+      <label class="calc-check">
+        <input type="checkbox" id="childless" checked> nie mam dzieci (wyższa składka pielęgnacyjna)
+      </label>
+    </div>
+    <div class="calc-result" id="result" hidden>
+      <table>
+        <tr><td>Brutto miesięcznie</td><td id="rGross">—</td></tr>
+        <tr><td>Ubezpieczenie emerytalne (9,3%)</td><td id="rRv">—</td></tr>
+        <tr><td>Ubezpieczenie zdrowotne (~8,55%)</td><td id="rKv">—</td></tr>
+        <tr><td>Ubezpieczenie pielęgnacyjne</td><td id="rPv">—</td></tr>
+        <tr><td>Ubezpieczenie od bezrobocia (1,3%)</td><td id="rAv">—</td></tr>
+        <tr><td>Podatek dochodowy (Lohnsteuer)</td><td id="rTax">—</td></tr>
+        <tr><td>Podatek kościelny</td><td id="rChurch">—</td></tr>
+        <tr><td><strong>Netto miesięcznie („na rękę")</strong></td><td class="calc-net" id="rNet">—</td></tr>
+        <tr><td>Netto rocznie</td><td id="rNetYear">—</td></tr>
+      </table>
+    </div>
+    <p class="calc-note">⚠️ Kalkulator szacunkowy (parametry 2025/2026, Steuerklasse
+       wg uproszczonych reguł, przeciętna składka dodatkowa kasy chorych). Rzeczywista
+       wypłata może się różnić o kilka procent — zależy od kasy chorych, landu i dodatków.
+       Przy 173 godz./mc (pełny etat).</p>
+  </div>
+
+  <h2>Orientacyjne stawki w zawodach technicznych (2026)</h2>
+  <table class="wage-table">
+    <tr><th>Zawód</th><th>Stawka €/h</th><th>Brutto/mc (~173 h)</th></tr>
+    <tr><td>Elektryk (z uprawnieniami)</td><td>16–22</td><td>2 770 – 3 800 €</td></tr>
+    <tr><td>Hydraulik / monter instalacji</td><td>16–22</td><td>2 770 – 3 800 €</td></tr>
+    <tr><td>Spawacz (MAG/TIG z certyfikatami)</td><td>15–21</td><td>2 600 – 3 630 €</td></tr>
+    <tr><td>Mechanik samochodowy</td><td>15–20</td><td>2 600 – 3 460 €</td></tr>
+    <tr><td>Pracownik budowlany</td><td>14–19</td><td>2 420 – 3 290 €</td></tr>
+    <tr><td>Kierowca C+E</td><td>14–18</td><td>2 420 – 3 110 €</td></tr>
+    <tr><td>Magazynier / operator wózka</td><td>13–16</td><td>2 250 – 2 770 €</td></tr>
+  </table>
+  <p style="font-size:.8rem" class="calc-note">Widełki orientacyjne — realna stawka zależy
+     od landu (południe płaci więcej), doświadczenia, uprawnień i tego, czy zatrudnia Cię
+     firma niemiecka, czy agencja. Ustawowa płaca minimalna w Niemczech to punkt odniesienia
+     dla prac bez kwalifikacji.</p>
+
+  <h2>Częste pytania</h2>
+  <div class="faq" style="padding:0;max-width:none">
+    <details>
+      <summary>Ile procent brutto zabierają składki?</summary>
+      <p>Pracownik płaci ok. 20% brutto na ubezpieczenia: emerytalne 9,3%, zdrowotne 7,3% + połowa
+         składki dodatkowej kasy (średnio ~1,25%), pielęgnacyjne 1,8–2,4%, od bezrobocia 1,3%.
+         Reszta potrąceń to podatek dochodowy — zależny od Steuerklasse i wysokości pensji.</p>
+    </details>
+    <details>
+      <summary>Którą Steuerklasse dostanę?</summary>
+      <p>Samotni — klasę I. Małżeństwa mogą wybrać III/V (gdy jedno zarabia zdecydowanie więcej)
+         albo IV/IV. Druga praca zawsze ma klasę VI. Klasę zmienia się w Finanzamt.</p>
+    </details>
+    <details>
+      <summary>Czy z pensji netto muszę jeszcze coś opłacić?</summary>
+      <p>Z netto opłacasz mieszkanie, media i ewentualnie prywatne ubezpieczenia. Składki
+         zdrowotne i emerytalne są już potrącone — inaczej niż przy niektórych umowach w Polsce.</p>
+    </details>
+  </div>
+
+  <div class="calc-cta">
+    <h2>Zanim wyślesz aplikację — zrób CV po niemiecku</h2>
+    <p>Niemiecki Lebenslauf ma swoje zasady: zdjęcie, data urodzenia, podpis.
+       Nasz kreator ustawia wszystko automatycznie, a Tłumacz AI pisze CV po niemiecku.</p>
+    <a href="../kreator.html?country=de" class="btn btn-primary btn-lg">Stwórz CV do Niemiec →</a>
+    <p style="margin-top:1rem;font-size:.85rem"><a href="../kraje/cv-do-niemiec.html" style="color:#93c5fd">Zobacz też: standardy CV do Niemiec</a></p>
+  </div>
+</article>
+
+<footer class="footer">
+  <p>© 2026 CVTurbo · <a href="../index.html">Strona główna</a> · <a href="../kreator.html">Kreator CV</a></p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var HOURS = 173;
+  // Parametry 2025/2026 (szacunek): progi §32a EStG, BBG, stawki składek
+  var GRUNDFREIBETRAG = 12096;
+  var BBG_RV = 8050;    // €/mc — próg emerytalne/bezrobocie
+  var BBG_KV = 5512.5;  // €/mc — próg zdrowotne/pielęgnacyjne
+  var WERBUNGSKOSTEN = 1230, SONDERAUSGABEN = 36;
+
+  function incomeTax(zvE) { // roczny podatek wg §32a (parametry 2025)
+    if (zvE <= GRUNDFREIBETRAG) return 0;
+    if (zvE <= 17443) { var y = (zvE - GRUNDFREIBETRAG) / 10000; return (932.3 * y + 1400) * y; }
+    if (zvE <= 68480) { var z = (zvE - 17443) / 10000; return (176.64 * z + 2397) * z + 1015.13; }
+    if (zvE <= 277825) return 0.42 * zvE - 10911.92;
+    return 0.45 * zvE - 19246.67;
+  }
+
+  function calc() {
+    var hourly = parseFloat(document.getElementById('hourly').value);
+    var monthlyInput = parseFloat(document.getElementById('monthly').value);
+    var gross = monthlyInput > 0 ? monthlyInput : (hourly > 0 ? hourly * HOURS : 0);
+    var result = document.getElementById('result');
+    if (!gross) { result.hidden = true; return; }
+    result.hidden = false;
+
+    var cls = document.getElementById('taxclass').value;
+    var childless = document.getElementById('childless').checked;
+    var church = document.getElementById('church').checked;
+
+    var rv = Math.min(gross, BBG_RV) * 0.093;
+    var av = Math.min(gross, BBG_RV) * 0.013;
+    var kv = Math.min(gross, BBG_KV) * 0.0855;             // 7,3% + ~1,25% (poł. Zusatz)
+    var pv = Math.min(gross, BBG_KV) * (childless ? 0.024 : 0.018);
+    var social = rv + av + kv + pv;
+
+    var zvE = Math.max(0, gross * 12 - social * 12 - WERBUNGSKOSTEN - SONDERAUSGABEN);
+    var taxYear;
+    if (cls === '3') taxYear = 2 * incomeTax(zvE / 2);      // splitting
+    else taxYear = incomeTax(zvE);                          // I oraz IV ~ jak I
+    var tax = taxYear / 12;
+    var churchTax = church ? tax * 0.09 : 0;
+    var net = gross - social - tax - churchTax;
+
+    var f = function (v) { return v.toLocaleString('pl-PL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €'; };
+    document.getElementById('rGross').textContent = f(gross);
+    document.getElementById('rRv').textContent = '− ' + f(rv);
+    document.getElementById('rKv').textContent = '− ' + f(kv);
+    document.getElementById('rPv').textContent = '− ' + f(pv);
+    document.getElementById('rAv').textContent = '− ' + f(av);
+    document.getElementById('rTax').textContent = '− ' + f(tax);
+    document.getElementById('rChurch').textContent = church ? '− ' + f(churchTax) : '0 €';
+    document.getElementById('rNet').textContent = f(net);
+    document.getElementById('rNetYear').textContent = f(net * 12);
+  }
+
+  ['hourly', 'monthly', 'taxclass', 'church', 'childless'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', calc);
+  });
+  document.getElementById('hourly').addEventListener('input', function () {
+    document.getElementById('monthly').value = '';
+  });
+  document.getElementById('monthly').addEventListener('input', function () {
+    document.getElementById('hourly').value = '';
+  });
+})();
+</script>
+</body>
+</html>

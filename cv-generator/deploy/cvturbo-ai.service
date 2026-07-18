@@ -1,0 +1,33 @@
+# CVTurbo — usługa systemd dla serwera AI
+# Instalacja: patrz deploy/DEPLOY.md
+# Plik docelowy: /etc/systemd/system/cvturbo-ai.service
+
+[Unit]
+Description=CVTurbo AI server (import CV, tlumacz, listy motywacyjne, kody PRO)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/cvturbo/tools
+ExecStart=/usr/bin/node /var/www/cvturbo/tools/ai-server.js
+Restart=always
+RestartSec=5
+
+# Konfiguracja — utwórz plik /etc/cvturbo/ai.env (chmod 600, właściciel root):
+#   ANTHROPIC_API_KEY=sk-ant-...
+#   ALLOW_ORIGIN=https://TWOJA-DOMENA.pl
+#   AI_MODEL=claude-opus-4-8
+#   SUPABASE_URL=https://xxxx.supabase.co
+#   SUPABASE_SERVICE_KEY=eyJ...   (service_role — tylko na serwerze!)
+EnvironmentFile=/etc/cvturbo/ai.env
+
+# hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadOnlyPaths=/var/www/cvturbo
+
+[Install]
+WantedBy=multi-user.target

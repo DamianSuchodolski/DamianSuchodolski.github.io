@@ -1,0 +1,15 @@
+{
+  "name": "cvturbo-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Narzędzia CVTurbo: generator stron SEO + serwer tłumaczeń AI",
+  "scripts": {
+    "build-zawody": "node build-zawody.js",
+    "build-kraje": "node build-kraje.js",
+    "build-seo": "node build-zawody.js && node build-kraje.js",
+    "ai-server": "node ai-server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}

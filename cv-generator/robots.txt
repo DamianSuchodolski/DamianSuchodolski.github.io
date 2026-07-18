@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: zmień domenę przed wdrożeniem (spójnie z tools/build-zawody.js)
+Sitemap: https://cvturbo.pl/sitemap.xml
