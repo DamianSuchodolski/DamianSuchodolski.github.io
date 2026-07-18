@@ -115,6 +115,60 @@ domeny, konto Stripe (weryfikacja 1–2 dni).**
 
 ---
 
+## 💡 Faza 2.5 — BACKLOG KOMERCYJNY (burza mózgów 07.2026)
+
+Pomysły spoza podstawowej ścieżki — wciągać do F2/F3 wg danych z analityki.
+Zasada: grupa docelowa (fachowcy, praca za granicą) **nie lubi pisać o sobie**,
+działa z telefonu, wysyła CV WhatsAppem i ufa poleceniom brygady, nie reklamom.
+
+### TOP 5 (wpływ × wysiłek × dopasowanie do grupy)
+
+| # | Pomysł | Dlaczego najpierw |
+|---|---|---|
+| 1 | **Import CV ze zdjęcia/PDF** | usuwa główną barierę („nie chce mi się wpisywać od zera") — zdjęcie starego CV telefonem → AI wypełnia formularz; ta sama architektura co Tłumacz |
+| 2 | **Pakiet „Praca za granicą" 49–59 zł** | CV PL + wersja DE/EN + list motywacyjny + ściąga aplikowania; potraja koszyk samym bundlingiem |
+| 3 | **Kalkulatory zarobków (brutto→netto DE/CH, „zarobki spawacza 2026")** | magnesy SEO o rząd wielkości większym ruchu niż frazy CV; łapią klienta tydzień przed pisaniem CV |
+| 4 | **Polecenia brygadowe** („poleć koledze → obaj PRO za 9 zł") | darmowy kanał wzrostu skrojony pod socjologię grupy — brygada = 5 poleceń |
+| 5 | **Historia założyciela na landingu** | autentyczność nie do podrobienia: „zbudował fachowiec pracujący na zagranicznych kontraktach, nie korporacja HR" |
+
+### A. Usuwanie tarcia (konwersja)
+- [ ] Import CV ze zdjęcia/PDF (→ TOP 1)
+- [ ] **CV przez rozmowę** — czat/głos: „opowiedz, gdzie pracowałeś" → AI pisze
+      opisy; grupa nie lubi formularzy
+- [ ] Mobile-first / PWA — cała rekrutacja tej grupy dzieje się na telefonie
+- [ ] **CV jako link + QR** (`cv.domena.pl/jan-kowalski`) — CV wysyła się tu
+      WhatsAppem/Messengerem; bonus: statystyki wyświetleń → pretekst do maila
+
+### B. Wyższy koszyk
+- [ ] Pakiet „Praca za granicą" (→ TOP 2)
+- [ ] AI-recenzent „oceń jak rekruter" — free: 3 uwagi (teaser), PRO: wszystkie
+- [ ] Dopasowanie CV do ogłoszenia (wklej ofertę → przestawienie akcentów + luki)
+- [ ] Poprawa zdjęcia AI (selfie → zdjęcie biznesowe; DACH ceni zdjęcie)
+- [ ] Sprawdzenie przez człowieka, 99 zł (48h; na start robione osobiście —
+      marża ~90% + bezcenny kontakt z klientami)
+
+### C. Kanały dotarcia
+- [ ] Kalkulatory zarobków jako magnesy SEO (→ TOP 3)
+- [ ] Grupy FB „Praca w Niemczech/Holandii/Norwegii" — content, nie spam
+- [ ] TikTok/Shorts: „Dlaczego Niemiec odrzuci Twoje CV w 10 sekund"
+- [ ] Szkoły branżowe i OHP — absolwenci = pierwsze CV; 1 nauczyciel = setki uczniów
+- [ ] Interfejs ukraiński (→ też F3) — wielka nisza bez konkurencji
+
+### D. Mechanizmy wzrostu i retencja
+- [ ] Polecenia brygadowe (→ TOP 4)
+- [ ] B2B hurt kodów PRO / white-label dla agencji pracy (→ też F3)
+- [ ] Cykl życia CV: mail po 6 mies. „Twój wpis »obecnie« ma już rok — odśwież
+      w 2 minuty" → powrót = drugi zakup
+
+### E. Zaufanie
+- [ ] Historia założyciela (→ TOP 5) + zdjęcie
+- [ ] Prawdziwe historie klientów („Marek, spawacz — po 2 tyg. praca
+      w Stuttgarcie") — zbierać mailem od pierwszego zakupu
+- [ ] Cross-sell z vielspass.pl: „CV po niemiecku + niemiecki do pracy" —
+      dwa produkty karmią się nawzajem
+
+---
+
 ## 🏗️ Faza 3 — SKALA (produkt pełnoprawny)
 
 *Kryterium: powracający użytkownicy i przychód > koszty × 5.*
