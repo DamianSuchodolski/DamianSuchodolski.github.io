@@ -60,8 +60,8 @@ sudo certbot --nginx -d TWOJA-DOMENA.pl -d www.TWOJA-DOMENA.pl
 ## 6. Konfiguracja frontu — PRZED wgraniem (albo popraw i wgraj ponownie)
 
 - `js/leads.js` → `CVTURBO_CONFIG`: `aiEndpoint: ''` (pusty = ta sama domena,
-  przez proxy nginx), `supabaseUrl`, `supabaseAnonKey`, linki Stripe,
-  `plausibleDomain` (jeśli włączasz analitykę)
+  przez proxy nginx), `supabaseUrl`, `supabaseAnonKey`, linki płatności
+  Przelewy24 (`payProLink`/`payPakietLink`), `plausibleDomain` (jeśli włączasz)
 - `tools/build-kraje.js` + `tools/build-zawody.js` → `BASE_URL` na domenę,
   potem `npm run build-seo` i wgraj ponownie
 - `robots.txt` → adres sitemap na domenę

@@ -19,10 +19,11 @@ window.CVTURBO_CONFIG = {
   // Serwer AI (tools/ai-server.js). Lokalnie: http://localhost:4141,
   // na produkcji: '' (pusty = ta sama domena, przez proxy nginx /api/).
   aiEndpoint: 'http://localhost:4141',
-  // Linki płatności Stripe (Payment Links). Puste = modal zbiera e-maile
-  // (intencje zakupu). Po wklejeniu linków przyciski kierują do płatności.
-  stripeProLink: '',
-  stripePakietLink: '',
+  // Linki płatności (Przelewy24 „link do płatności" / Stripe Payment Link /
+  // dowolny inny). Puste = modal zbiera e-maile (intencje zakupu).
+  // Po wklejeniu linków przyciski kierują prosto do płatności.
+  payProLink: '',
+  payPakietLink: '',
   // Analityka Plausible: wpisz domenę (np. 'twojadomena.pl'), pusta = wyłączona.
   plausibleDomain: ''
 };

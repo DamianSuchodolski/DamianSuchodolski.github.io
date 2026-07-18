@@ -205,12 +205,16 @@ alter table pro_codes enable row level security;
 -- SUPABASE_SERVICE_KEY (endpoint /api/redeem).
 ```
 
-Przepływ zakupu: Stripe Payment Link (linki w `CVTURBO_CONFIG`) → po płatności
-przekierowanie na `dziekujemy.html?kod=XXX&tier=pro|pakiet` → przycisk prowadzi
-do `kreator.html?kod=XXX` → automatyczna aktywacja przez `/api/redeem`
-(kod jednorazowy, oznaczany `used_at`). W modalu PRO jest też ręczna sekcja
-„🔑 Mam już kod". Kody generujesz sam (np. `CVT-` + losowe znaki) i wgrywasz
-do tabeli; w Stripe ustaw redirect po płatności na dziekujemy.html z kodem.
+Przepływ zakupu (operator: **Przelewy24**, front neutralny — przyjmie każdy
+link płatności): link z panelu P24 (`payProLink`/`payPakietLink`
+w `CVTURBO_CONFIG`) → po płatności powrót na `dziekujemy.html` — strona
+informuje, że kod przyjdzie e-mailem (wysyłasz go po powiadomieniu P24
+o wpłacie; docelowo webhook P24 automatyzuje kod + e-mail). Kod aktywuje się
+przez `kreator.html?kod=XXX` (link w mailu) albo sekcję „🔑 Mam już kod"
+w modalu — oba przez `/api/redeem` (kod jednorazowy, oznaczany `used_at`).
+Kody generujesz sam (np. `CVT-` + losowe znaki) i wgrywasz do tabeli.
+Wariant z kodem w URL (`dziekujemy.html?kod=XXX&tier=pakiet`) też działa —
+przydatny przy operatorach pozwalających na parametry w adresie powrotu.
 
 ## Checklista przed deployem
 

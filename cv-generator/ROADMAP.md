@@ -46,22 +46,35 @@ koszyk (nowe funkcje).
       wpisz `plausibleDomain` w CVTURBO_CONFIG + załóż konto Plausible
 - [ ] Google Search Console + zgłoszenie sitemap; Bing Webmaster Tools
 
-### 1.3 Płatności ⭐ NAJWAŻNIEJSZE
-- [ ] **Rekomendacja MVP: Stripe Payment Link** (najszybsze wdrożenie, obsługa
-      BLIK/kart, faktury przez Stripe Tax opcjonalnie).
-      Alternatywy PL: HotPay, Przelewy24 (niższe prowizje, więcej integracji).
-- [x] Przepływ MVP — ✅ okablowany: `dziekujemy.html?kod=&tier=` → auto-aktywacja
-      w kreatorze (`?kod=`), sekcja „Mam już kod" w modalu, przełącznik na linki
-      Stripe w CVTURBO_CONFIG (puste = dotychczasowe zbieranie e-maili)
+### 1.3 Płatności ⭐ NAJWAŻNIEJSZE — operator: **Przelewy24**
+- [ ] Konto Przelewy24: rejestracja + weryfikacja sklepu (podanie domeny!).
+      ⚠️ **Do zweryfikowania przed rejestracją:** P24 wymaga działalności
+      gospodarczej (NIP) — jeśli planujesz start na działalności
+      nierejestrowanej, potwierdź to z ich BOK albo rozważ na przejściowo
+      operatora akceptującego osoby prywatne / załóż JDG.
+      Atuty P24: natywny BLIK (metoda nr 1 naszej grupy), prowizje ~1–1,5%
+      (taniej niż Stripe), polski BOK. Plan B: Stripe (konfiguracja frontu
+      jest neutralna — przyjmie dowolny link płatności).
+- [ ] Start MVP: **linki płatności z panelu P24** (2 szt.: PRO 19 zł,
+      Pakiet 49 zł) → wkleić do `payProLink`/`payPakietLink` w CVTURBO_CONFIG;
+      adres powrotu po płatności: `dziekujemy.html` (bez kodu w URL —
+      kod wysyłasz e-mailem, strona o tym informuje)
+- [ ] Docelowo (automatyzacja): endpoint `/api/pay/create` w ai-serverze
+      (P24 REST: transaction/register → przekierowanie) + webhook statusu
+      → automatyczne wygenerowanie kodu w `pro_codes` + e-mail; sandbox P24
+      do testów
+- [x] Przepływ MVP — ✅ okablowany po stronie produktu: `dziekujemy.html`
+      (z kodem w URL lub komunikatem „kod przyjdzie e-mailem" — wariant P24),
+      auto-aktywacja `kreator.html?kod=`, sekcja „Mam już kod" w modalu,
+      neutralne linki płatności w CVTURBO_CONFIG (puste = zbieranie e-maili)
 - [x] Weryfikacja kodu — ✅ endpoint `/api/redeem` w ai-serverze (Supabase
       service key, kody jednorazowe, SQL `pro_codes` w README).
-      Zostaje: utworzyć tabelę, wygenerować kody, wkleić linki Stripe
-- [ ] E-mail po zakupie (potwierdzenie + kod) — na start ręcznie/Zapier,
-      docelowo webhook Stripe → funkcja
+      Zostaje: utworzyć tabelę, wygenerować kody, wkleić linki P24
+- [ ] E-mail po zakupie (potwierdzenie + kod) — na start ręcznie (P24 wysyła
+      powiadomienie o wpłacie), docelowo webhook P24 → auto-kod + e-mail
 - [ ] Obsługa zwrotów: przy zgłoszeniu sprawdź użycie kodu w `pro_codes`
-      (kolumny `translated_at`, `pdf_downloaded_at`) — kod nieużyty → refund
-      w Stripe od ręki; użyty → odmowa zgodna z regulaminem. Zwrot zawsze
-      lepszy niż chargeback (kara Stripe + ryzyko konta).
+      (kolumny `translated_at`, `pdf_downloaded_at`) — kod nieużyty → zwrot
+      z panelu P24 od ręki; użyty → odmowa zgodna z regulaminem.
 
 ### 1.4 Lead magnet (obiecany na landingu!)
 - [x] Poradnik **„10 błędów, przez które CV ląduje w koszu"** — ✅ gotowy
@@ -71,7 +84,8 @@ koszyk (nowe funkcje).
       podpięty do leadów z Supabase
 
 **Szacunek Fazy 1: 3–5 dni skupionej pracy. Blokery zewnętrzne: rejestracja
-domeny, konto Stripe (weryfikacja 1–2 dni).**
+domeny, konto Przelewy24 (weryfikacja sklepu wymaga działającej domeny —
+najpierw deploy, potem rejestracja w P24).**
 
 ---
 

@@ -851,9 +851,9 @@
       source: selectedTier === 'pakiet' ? 'pakiet-intent' : 'pro-intent',
       consent: $('#proConsent').checked
     });
-    // Gdy linki Stripe są skonfigurowane — prowadzimy prosto do płatności
+    // Gdy linki płatności są skonfigurowane — prowadzimy prosto do płatności
     var cfg = window.CVTURBO_CONFIG || {};
-    var payLink = selectedTier === 'pakiet' ? cfg.stripePakietLink : cfg.stripeProLink;
+    var payLink = selectedTier === 'pakiet' ? cfg.payPakietLink : cfg.payProLink;
     if (payLink) {
       location.href = payLink;
       return;

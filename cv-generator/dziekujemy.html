@@ -49,6 +49,11 @@
     document.getElementById('kodBox').textContent = kod;
     document.getElementById('activateBtn').href =
       'kreator.html?kod=' + encodeURIComponent(kod) + '&tier=' + tier;
+  } else {
+    // Przepływ P24: powrót z bramki bez kodu w URL — kod idzie e-mailem
+    document.getElementById('kodBox').textContent = '📧 Kod wysyłamy e-mailem w ciągu kilku minut';
+    document.getElementById('kodBox').style.fontSize = '1rem';
+    document.getElementById('activateBtn').textContent = 'Otwórz kreator (kod wpiszesz w „Mam już kod")';
   }
   document.getElementById('tierInfo').textContent = tier === 'pakiet'
     ? 'Pakiet „Praca za granicą": wszystkie szablony, Tłumacz AI i listy motywacyjne.'
