@@ -7,7 +7,11 @@
  * wysyłany do bazy.
  *
  * Tabela leads: id uuid pk default gen_random_uuid(),
- *   email text not null, source text, consent boolean, created_at timestamptz default now()
+ *   email text not null, source text, consent boolean, ref text,
+ *   created_at timestamptz default now()
+ *
+ * Polecenia: parametr ?ref=<kod> zapamiętywany w localStorage (cvturbo_ref)
+ * i dołączany do każdego leada — podstawa pod program poleceń brygadowych.
  */
 window.CVTURBO_CONFIG = {
   supabaseUrl: '',      // np. https://xxxx.supabase.co
@@ -17,12 +21,21 @@ window.CVTURBO_CONFIG = {
   aiEndpoint: 'http://localhost:4141'
 };
 
+// Zapamiętaj kod polecenia z URL (?ref=...) — kto przyprowadził tego użytkownika
+try {
+  var refParam = new URLSearchParams(location.search).get('ref');
+  if (refParam && /^[a-z0-9-]{3,24}$/i.test(refParam)) {
+    localStorage.setItem('cvturbo_ref', refParam);
+  }
+} catch (e) { /* ignoruj */ }
+
 window.CVLeads = {
   save: function (lead) {
     const record = {
       email: lead.email,
       source: lead.source || 'unknown',
       consent: !!lead.consent,
+      ref: localStorage.getItem('cvturbo_ref') || null,
       created_at: new Date().toISOString()
     };
 
@@ -41,7 +54,7 @@ window.CVLeads = {
           'apikey': cfg.supabaseAnonKey,
           'Authorization': 'Bearer ' + cfg.supabaseAnonKey
         },
-        body: JSON.stringify({ email: record.email, source: record.source, consent: record.consent })
+        body: JSON.stringify({ email: record.email, source: record.source, consent: record.consent, ref: record.ref })
       }).catch(function () { /* offline — lead został lokalnie */ });
     }
   }

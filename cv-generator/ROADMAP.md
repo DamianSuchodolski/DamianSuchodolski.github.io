@@ -103,8 +103,8 @@ domeny, konto Stripe (weryfikacja 1–2 dni).**
 ### 2.3 Produkt
 - [ ] **Twarde PRO**: weryfikacja kodu przez serwer przy każdej funkcji PRO
       (Tłumacz AI naturalnie serwerowy — egzekwować tam najpierw)
-- [ ] Generator **listów motywacyjnych AI** (PRO; ta sama architektura co
-      Tłumacz — nowy endpoint + prompt; w DE/AT/CH list to standard aplikacji)
+- [x] Generator **listów motywacyjnych AI** — ✅ wdrożony (07.2026) jako funkcja
+      PAKIETU: `/api/cover-letter`, modal z danymi oferty, konwencje per kraj
 - [ ] AI „Ulepsz moje CV" — przepisanie opisów na osiągnięcia z liczbami (PRO)
 - [ ] 2–3 nowe szablony (w tym 1 darmowy dla SEO „darmowy kreator CV")
 - [ ] Dedykowany render PDF (serwer: puppeteer) — spójny wynik niezależnie
@@ -121,15 +121,15 @@ Pomysły spoza podstawowej ścieżki — wciągać do F2/F3 wg danych z analityk
 Zasada: grupa docelowa (fachowcy, praca za granicą) **nie lubi pisać o sobie**,
 działa z telefonu, wysyła CV WhatsAppem i ufa poleceniom brygady, nie reklamom.
 
-### TOP 5 (wpływ × wysiłek × dopasowanie do grupy)
+### TOP 5 — ✅ WDROŻONE jako MVP (07.2026)
 
-| # | Pomysł | Dlaczego najpierw |
+| # | Pomysł | Status |
 |---|---|---|
-| 1 | **Import CV ze zdjęcia/PDF** | usuwa główną barierę („nie chce mi się wpisywać od zera") — zdjęcie starego CV telefonem → AI wypełnia formularz; ta sama architektura co Tłumacz |
-| 2 | **Pakiet „Praca za granicą" 49–59 zł** | CV PL + wersja DE/EN + list motywacyjny + ściąga aplikowania; potraja koszyk samym bundlingiem |
-| 3 | **Kalkulatory zarobków (brutto→netto DE/CH, „zarobki spawacza 2026")** | magnesy SEO o rząd wielkości większym ruchu niż frazy CV; łapią klienta tydzień przed pisaniem CV |
-| 4 | **Polecenia brygadowe** („poleć koledze → obaj PRO za 9 zł") | darmowy kanał wzrostu skrojony pod socjologię grupy — brygada = 5 poleceń |
-| 5 | **Historia założyciela na landingu** | autentyczność nie do podrobienia: „zbudował fachowiec pracujący na zagranicznych kontraktach, nie korporacja HR" |
+| 1 | **Import CV ze zdjęcia/PDF** | ✅ `/api/import` + przycisk „📸 Wczytaj stare CV" (darmowy, kompresja zdjęcia po stronie klienta, backup+cofnięcie) |
+| 2 | **Pakiet „Praca za granicą" 49 zł** | ✅ trzecia karta cenowa + wybór tieru w modalu (lead `pakiet-intent`) + **listy motywacyjne AI** (`/api/cover-letter`, gating `cvturbo_pakiet`); płatność dojdzie w F1.3 |
+| 3 | **Kalkulator brutto→netto Niemcy** | ✅ `kalkulator/brutto-netto-niemcy.html` (Steuerklasse I/III/IV, tabela stawek 7 zawodów, FAQ + JSON-LD, CTA do kreatora); kolejne kalkulatory (CH, per zawód) — backlog |
+| 4 | **Polecenia brygadowe** | ✅ MVP: `?ref=` zapamiętywany i dołączany do leadów + toast po pobraniu PDF z udostępnianiem na WhatsApp (własny kod `cvturbo_myref`); rabaty „obaj PRO za 9 zł" — po wdrożeniu płatności |
+| 5 | **Historia założyciela** | ✅ sekcja „Od fachowca dla fachowców" na landingu (podmień emoji na prawdziwe zdjęcie!) |
 
 ### A. Usuwanie tarcia (konwersja)
 - [ ] Import CV ze zdjęcia/PDF (→ TOP 1)

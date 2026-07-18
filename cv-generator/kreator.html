@@ -43,6 +43,8 @@
     </label>
     <button type="button" class="btn-ghost btn-ai" id="aiTranslateBtn"
       title="Przetłumacz całe CV na język wybranego kraju">🤖 Tłumacz AI <span class="mini-pro">PRO</span></button>
+    <button type="button" class="btn-ghost btn-ai" id="coverBtn"
+      title="Wygeneruj list motywacyjny pod Twoje CV i konkretną ofertę">✉️ List motyw. <span class="mini-pro mini-pakiet">PAKIET</span></button>
     <div class="control control-data">
       <button type="button" class="btn-ghost" id="exportJson" title="Zapisz kopię danych CV do pliku">💾 Kopia</button>
       <button type="button" class="btn-ghost" id="importJson" title="Wczytaj dane CV z pliku">📂 Wczytaj</button>
@@ -74,6 +76,15 @@
       <summary>📋 Standardy CV: <strong id="krajPanelName">Polska</strong> — co musi być, czego unikać</summary>
       <div id="krajPanelBody"></div>
     </details>
+
+    <div class="import-bar">
+      <div>
+        <strong>Masz już CV?</strong> Zrób zdjęcie albo wybierz plik (PDF/JPG) —
+        wypełnimy formularz za Ciebie. <span class="import-free">Za darmo</span>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="importBtn">📸 Wczytaj stare CV</button>
+      <input type="file" id="importCvFile" accept="image/*,application/pdf" hidden>
+    </div>
 
     <fieldset class="fgroup fgroup-zawod">
       <legend>🎯 Twój zawód</legend>
@@ -240,6 +251,12 @@
       <div class="pro-guarantee">✅ 14 dni na zwrot, jeśli nie skorzystasz z funkcji PRO</div>
     </div>
 
+    <div class="pakiet-hint" id="pakietHint">
+      ✈️ <strong>Pakiet „Praca za granicą" — 49 zł:</strong> wszystko z PRO
+      + listy motywacyjne AI + ściągi aplikowania w 7 krajach.
+      <button type="button" class="btn-ghost" id="pakietSelectBtn">Wybieram pakiet</button>
+    </div>
+
     <form id="proForm">
       <input type="email" id="proEmail" placeholder="Twój adres e-mail" required>
       <button type="submit" class="btn btn-gold btn-block">Odblokuj PRO za 19 zł →</button>
@@ -267,6 +284,49 @@
     <p class="modal-note">Wysyłamy tylko treść CV — bez imienia, e-maila, telefonu i zdjęcia.
        Oryginał zapisujemy na Twoim urządzeniu, więc zawsze możesz go przywrócić.</p>
   </div>
+</div>
+
+<div class="modal-backdrop" id="importModal" hidden>
+  <div class="modal">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>📸 Wczytywanie CV</h2>
+    <p>Odczytujemy Twoje CV i wypełniamy formularz. Obecne dane w formularzu
+       zostaną zastąpione — zapisujemy ich kopię, więc możesz cofnąć.</p>
+    <p class="modal-note ai-status" id="importStatus">⏳ Analizuję dokument… to potrwa do minuty.</p>
+    <button type="button" class="btn-ghost btn-block-ghost" id="importUndoBtn" hidden>↩ Przywróć dane sprzed importu</button>
+    <p class="modal-note">Plik wysyłamy wyłącznie w celu odczytania treści — nie zapisujemy go.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="coverModal" hidden>
+  <div class="modal modal-wide">
+    <button class="modal-close" data-close>&times;</button>
+    <h2>✉️ List motywacyjny</h2>
+    <p>Napiszemy list pod Twoje CV, w języku wybranego kraju
+       (<strong id="coverTargetLang">…</strong>), zgodnie z lokalnymi zwyczajami.</p>
+    <div class="frow frow-2">
+      <label>Firma (opcjonalnie) <input type="text" id="coverCompany" placeholder="np. Müller GmbH"></label>
+      <label>Stanowisko z ogłoszenia <input type="text" id="coverPosition" placeholder="np. Elektriker"></label>
+    </div>
+    <label class="cover-details-label">Szczegóły z ogłoszenia (opcjonalnie — im więcej, tym lepszy list)
+      <textarea id="coverDetails" rows="3" placeholder="Wklej fragment ogłoszenia lub wymagania…"></textarea>
+    </label>
+    <button type="button" class="btn btn-primary btn-block" id="coverRunBtn">Napisz list →</button>
+    <p class="modal-note ai-status" id="coverStatus" hidden></p>
+    <div id="coverResultWrap" hidden>
+      <textarea id="coverResult" rows="14"></textarea>
+      <div class="cover-actions">
+        <button type="button" class="btn-ghost" id="coverCopyBtn">📋 Kopiuj do schowka</button>
+        <span class="modal-note">Przejrzyj i dopasuj — list ma brzmieć jak Ty.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="share-toast" id="shareToast" hidden>
+  <span>💪 CV gotowe! Znasz kogoś z brygady, komu też się przyda?</span>
+  <a id="shareWhatsApp" class="btn btn-primary btn-sm" target="_blank" rel="noopener">Wyślij na WhatsApp</a>
+  <button type="button" class="share-close" id="shareClose">&times;</button>
 </div>
 
 <script src="js/leads.js"></script>

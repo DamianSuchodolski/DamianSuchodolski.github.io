@@ -219,6 +219,89 @@ textarea { resize: vertical; }
 }
 .level-picker button.on { background: var(--accent); border-color: var(--accent); }
 
+/* ---------- Import CV (akwizycja) ---------- */
+.import-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: .9rem 1.2rem;
+  font-size: .85rem;
+}
+.import-free {
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 700;
+  font-size: .72rem;
+  padding: .15rem .5rem;
+  border-radius: 99px;
+}
+
+/* ---------- List motywacyjny / modale szerokie ---------- */
+.modal-wide { max-width: 560px; }
+.mini-pakiet { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+.cover-details-label {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin: .8rem 0;
+}
+#coverResult { width: 100%; font-size: .85rem; line-height: 1.5; margin-top: .8rem; }
+.cover-actions { display: flex; align-items: center; gap: .8rem; margin-top: .5rem; flex-wrap: wrap; }
+
+/* ---------- Pakiet w modalu PRO ---------- */
+.pakiet-hint {
+  background: #eff6ff;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  padding: .7rem .9rem;
+  font-size: .8rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.pakiet-hint.pakiet-selected { background: #dbeafe; border-style: solid; }
+
+/* ---------- Toast poleceń ---------- */
+.share-toast {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  z-index: 90;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid #22c55e;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, .25);
+  padding: 1rem 2.4rem 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  max-width: 420px;
+  font-size: .85rem;
+}
+.share-toast .btn { white-space: nowrap; text-decoration: none; }
+.share-close {
+  position: absolute;
+  top: .3rem;
+  right: .5rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+@media print { .share-toast { display: none !important; } }
+
 /* ---------- Panel standardów kraju ---------- */
 .kraj-panel {
   background: var(--panel);

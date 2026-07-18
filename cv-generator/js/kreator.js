@@ -4,6 +4,7 @@
 
   var STORAGE_KEY = 'cvturbo_cv';
   var PRO_KEY = 'cvturbo_pro';
+  var PAKIET_KEY = 'cvturbo_pakiet';
   var LEAD_DONE_KEY = 'cvturbo_lead_done';
 
   var LANG_LEVELS = ['A1 — początkujący', 'A2 — podstawowy', 'B1 — średnio zaawansowany',
@@ -172,7 +173,8 @@
     if (saved) state = Object.assign(defaultState(), saved);
   } catch (e) { /* uszkodzony zapis — start od zera */ }
 
-  function isPro() { return localStorage.getItem(PRO_KEY) === '1'; }
+  function isPakiet() { return localStorage.getItem(PAKIET_KEY) === '1'; }
+  function isPro() { return localStorage.getItem(PRO_KEY) === '1' || isPakiet(); }
   function isLockedTemplate() {
     return FREE_TEMPLATES.indexOf(state.template) === -1 && !isPro();
   }
@@ -843,11 +845,11 @@
     e.preventDefault();
     CVLeads.save({
       email: $('#proEmail').value.trim(),
-      source: 'pro-intent',
+      source: selectedTier === 'pakiet' ? 'pakiet-intent' : 'pro-intent',
       consent: $('#proConsent').checked
     });
     $('#proThanks').hidden = false;
-    this.querySelector('button').disabled = true;
+    this.querySelector('button[type="submit"]').disabled = true;
   });
 
   /* ==================== Tłumacz AI (PRO) ==================== */
@@ -940,6 +942,229 @@
       $('#aiStatus').hidden = false;
       $('#aiStatus').textContent = '↩ Przywrócono wersję sprzed tłumaczenia.';
     } catch (e) { /* uszkodzony backup */ }
+  });
+
+  /* ==================== Import CV ze zdjęcia/PDF (darmowy) ==================== */
+
+  var IMPORT_LEVEL_MAP = {
+    A1: LANG_LEVELS[0], A2: LANG_LEVELS[1], B1: LANG_LEVELS[2],
+    B2: LANG_LEVELS[3], C1: LANG_LEVELS[4], C2: LANG_LEVELS[5],
+    native: NATIVE_LEVEL, unknown: LANG_LEVELS[2]
+  };
+
+  $('#importBtn').addEventListener('click', function () { $('#importCvFile').click(); });
+
+  $('#importCvFile').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    this.value = '';
+    if (!file) return;
+
+    var status = $('#importStatus');
+    $('#importUndoBtn').hidden = true;
+    status.textContent = '⏳ Analizuję dokument… to potrwa do minuty.';
+    openModal('#importModal');
+
+    prepareImportFile(file)
+      .then(function (prepared) {
+        return CVAI.importCV(prepared.base64, prepared.mediaType);
+      })
+      .then(function (data) { applyImport(data); })
+      .then(function () {
+        status.textContent = '✅ Gotowe! Formularz wypełniony. Przejrzyj dane — ' +
+          'zdjęcie/skan bywa niedoskonały, a AI nie zgaduje brakujących informacji.';
+        $('#importUndoBtn').hidden = false;
+      })
+      .catch(function (err) {
+        status.textContent = '❌ ' + err.message;
+      });
+  });
+
+  function prepareImportFile(file) {
+    return new Promise(function (resolve, reject) {
+      if (file.type === 'application/pdf') {
+        if (file.size > 5 * 1024 * 1024) {
+          return reject(new Error('PDF jest za duży (limit 5 MB).'));
+        }
+        var fr = new FileReader();
+        fr.onload = function () {
+          resolve({ base64: fr.result.split(',')[1], mediaType: 'application/pdf' });
+        };
+        fr.onerror = function () { reject(new Error('Nie udało się odczytać pliku.')); };
+        fr.readAsDataURL(file);
+        return;
+      }
+      if (!/^image\//.test(file.type)) {
+        return reject(new Error('Wybierz zdjęcie (JPG/PNG) albo PDF.'));
+      }
+      // zdjęcie: przeskaluj do maks. 2000 px i skompresuj — szybciej i taniej
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var scale = Math.min(1, 2000 / Math.max(img.width, img.height));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        resolve({ base64: dataUrl.split(',')[1], mediaType: 'image/jpeg' });
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error('Nie udało się odczytać zdjęcia.'));
+      };
+      img.src = url;
+    });
+  }
+
+  function applyImport(d) {
+    try { localStorage.setItem(AI_BACKUP_KEY, JSON.stringify(state)); } catch (e) {}
+
+    ['name', 'email', 'phone', 'city'].forEach(function (k) {
+      if (d.personal && d.personal[k]) state.personal[k] = d.personal[k];
+    });
+    if (d.title) state.personal.title = d.title;
+    if (d.summary) state.summary = d.summary;
+    if (d.experience && d.experience.length) {
+      state.experience = d.experience.map(function (e) {
+        return { position: e.position, company: e.company, from: e.from,
+          to: e.to, current: !!e.current, desc: e.desc };
+      });
+    }
+    if (d.education && d.education.length) {
+      state.education = d.education.map(function (e) {
+        return { school: e.school, degree: e.degree, from: e.from, to: e.to };
+      });
+    }
+    if (d.skills && d.skills.length) {
+      state.skills = d.skills.filter(Boolean).map(function (name) {
+        return { name: name, level: 3 };
+      });
+    }
+    if (d.languages && d.languages.length) {
+      state.languages = d.languages.filter(function (l) { return l.name; }).map(function (l) {
+        return { name: l.name, level: IMPORT_LEVEL_MAP[l.level] || LANG_LEVELS[2] };
+      });
+    }
+    refreshFormFromState();
+  }
+
+  $('#importUndoBtn').addEventListener('click', function () {
+    var backup = localStorage.getItem(AI_BACKUP_KEY);
+    if (!backup) return;
+    try {
+      state = Object.assign(defaultState(), JSON.parse(backup));
+      localStorage.removeItem(AI_BACKUP_KEY);
+      refreshFormFromState();
+      this.hidden = true;
+      $('#importStatus').textContent = '↩ Przywrócono dane sprzed importu.';
+    } catch (e) { /* uszkodzony backup */ }
+  });
+
+  /* ==================== List motywacyjny (PAKIET) ==================== */
+
+  $('#coverBtn').addEventListener('click', function () {
+    if (!isPakiet()) {
+      selectTier('pakiet');
+      openModal('#proModal');
+      return;
+    }
+    $('#coverTargetLang').textContent = country().aiLabel;
+    $('#coverStatus').hidden = true;
+    $('#coverResultWrap').hidden = true;
+    openModal('#coverModal');
+  });
+
+  $('#coverRunBtn').addEventListener('click', function () {
+    var btn = this;
+    var status = $('#coverStatus');
+    btn.disabled = true;
+    status.hidden = false;
+    status.textContent = '⏳ Piszę list… kilkanaście sekund.';
+
+    var cv = {
+      name: state.personal.name,
+      title: state.personal.title,
+      summary: state.summary,
+      experience: state.experience.map(function (e) {
+        return { position: e.position, company: e.company, desc: e.desc, current: e.current };
+      }),
+      skills: state.skills.map(function (s) { return s.name; }),
+      languages: state.languages.map(function (l) { return l.name + ' (' + (l.level || '').split(' — ')[0] + ')'; })
+    };
+    var job = {
+      company: $('#coverCompany').value.trim(),
+      position: $('#coverPosition').value.trim(),
+      details: $('#coverDetails').value.trim().slice(0, 4000)
+    };
+
+    CVAI.coverLetter(cv, job, country().aiLang, state.profession)
+      .then(function (letter) {
+        $('#coverResult').value = letter;
+        $('#coverResultWrap').hidden = false;
+        status.textContent = '✅ Gotowe! Przejrzyj i dopasuj do siebie.';
+        btn.disabled = false;
+      })
+      .catch(function (err) {
+        status.textContent = '❌ ' + err.message;
+        btn.disabled = false;
+      });
+  });
+
+  $('#coverCopyBtn').addEventListener('click', function () {
+    var btn = this;
+    navigator.clipboard.writeText($('#coverResult').value).then(function () {
+      btn.textContent = '✅ Skopiowano!';
+      setTimeout(function () { btn.textContent = '📋 Kopiuj do schowka'; }, 2000);
+    });
+  });
+
+  /* ==================== Wybór PRO / PAKIET w modalu ==================== */
+
+  var selectedTier = 'pro';
+
+  function selectTier(tier) {
+    selectedTier = tier;
+    var btn = $('#proForm button[type="submit"]');
+    var hint = $('#pakietHint');
+    if (tier === 'pakiet') {
+      btn.textContent = 'Chcę PAKIET za 49 zł →';
+      hint.classList.add('pakiet-selected');
+      $('#pakietSelectBtn').textContent = '✅ Wybrany';
+    } else {
+      btn.textContent = 'Odblokuj PRO za 19 zł →';
+      hint.classList.remove('pakiet-selected');
+      $('#pakietSelectBtn').textContent = 'Wybieram pakiet';
+    }
+  }
+
+  $('#pakietSelectBtn').addEventListener('click', function () {
+    selectTier(selectedTier === 'pakiet' ? 'pro' : 'pakiet');
+  });
+
+  /* ==================== Polecenia brygadowe ==================== */
+
+  function myRefCode() {
+    var code = localStorage.getItem('cvturbo_myref');
+    if (!code) {
+      code = Math.random().toString(36).slice(2, 10);
+      try { localStorage.setItem('cvturbo_myref', code); } catch (e) {}
+    }
+    return code;
+  }
+
+  function showShareToast() {
+    var landing = location.href.replace(/kreator\.html.*$/, '') + '?ref=' + myRefCode();
+    var text = 'Zrobiłem sobie profesjonalne CV w 5 minut — za darmo. Sprawdź: ' + landing;
+    $('#shareWhatsApp').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+    $('#shareToast').hidden = false;
+  }
+
+  window.addEventListener('afterprint', function () {
+    setTimeout(showShareToast, 400);
+  });
+  $('#shareClose').addEventListener('click', function () {
+    $('#shareToast').hidden = true;
   });
 
   /* ==================== Eksport / import JSON ==================== */

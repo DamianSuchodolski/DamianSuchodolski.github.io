@@ -11,9 +11,15 @@ w przeglądarce, dane CV użytkownika **nie opuszczają jego urządzenia**
 |---|---|---|
 | Darmowy | 0 zł | kreator + podgląd A4, szablon „Nowoczesny", PDF ze stopką CVTurbo |
 | PRO | 19 zł (jednorazowo, promocja startowa; docelowo 39 zł) | Tłumacz AI, wszystkie szablony, bez stopki, kolor przewodni, warunkowa gwarancja zwrotu (14 dni, o ile funkcje PRO nieużyte) |
+| Pakiet „Praca za granicą" | 49 zł (jednorazowo) | wszystko z PRO + listy motywacyjne AI + ściągi aplikowania (strony kraje/) |
 
-Leady e-mail zbierane w 3 miejscach (pole `source`):
-`lead-magnet-poradnik` (landing), `download-pdf` (przed pobraniem), `pro-intent` (chęć zakupu PRO — najgorętsze leady).
+Import CV ze zdjęcia/PDF jest **darmowy** — to funkcja akwizycyjna (usuwa barierę
+„nie chce mi się wpisywać od zera"); koszt AI ~0,10 zł/import, limitowany per IP.
+
+Leady e-mail zbierane w 4 wariantach (pole `source`):
+`lead-magnet-poradnik` (landing), `download-pdf` (przed pobraniem), `pro-intent` /
+`pakiet-intent` (chęć zakupu — najgorętsze leady). Każdy lead niesie też `ref`
+(kod polecającego z `?ref=` — program poleceń brygadowych).
 
 ## Architektura
 
@@ -90,6 +96,9 @@ node cv-generator/tools/build-kraje.js        # generuje też sitemap.xml
 | `cvturbo_cv` | pełny stan CV (JSON) — autozapis przy każdej zmianie |
 | `cvturbo_cv_backup` | kopia sprzed tłumaczenia AI (przycisk „Przywróć") |
 | `cvturbo_pro` | `"1"` = PRO odblokowane (blokada miękka — patrz Ograniczenia) |
+| `cvturbo_pakiet` | `"1"` = Pakiet „Praca za granicą" (implikuje PRO; odblokowuje listy motywacyjne) |
+| `cvturbo_ref` | kod polecającego z `?ref=` (dołączany do leadów) |
+| `cvturbo_myref` | własny kod do polecania (generowany przy udostępnianiu) |
 | `cvturbo_lead_done` | `"1"` = e-mail przy pobraniu PDF już zebrany |
 | `cvturbo_leads` | lokalna kopia leadów (zapasowa wobec Supabase) |
 
@@ -133,6 +142,17 @@ Modal: miniatury szablonów, kotwica 39→19 zł, warunkowa gwarancja zwrotu
 (14 dni, tylko jeśli funkcje PRO nieużyte — chroni przed „pobiorę i zwrócę"),
 e-mail = rezerwacja ceny startowej (lead `pro-intent`).
 
+### Funkcje AI (ai-server: /api/translate, /api/import, /api/cover-letter)
+
+- **Import CV** (darmowy): przycisk „📸 Wczytaj stare CV" → zdjęcie (kompresja
+  do 2000 px po stronie klienta) lub PDF (≤5 MB) → ekstrakcja do struktury
+  formularza (structured outputs, model nic nie zmyśla — puste pole = pusty
+  string). Backup + cofnięcie jak przy tłumaczeniu.
+- **List motywacyjny** (PAKIET): „✉️ List motyw." → firma/stanowisko/fragment
+  ogłoszenia → list w języku kraju wg lokalnych konwencji (DE: Anschreiben
+  z Betreff). Wynik do edycji + kopiowanie do schowka.
+- Serwer ma limity per IP na godzinę (translate 20 / import 10 / cover 15).
+
 ### Tłumacz AI (funkcja PRO)
 
 Przepływ: przycisk „🤖 Tłumacz AI" → (bez PRO: modal zakupowy) → modal AI →
@@ -160,6 +180,7 @@ create table leads (
   email text not null,
   source text,
   consent boolean,
+  ref text,
   created_at timestamptz default now()
 );
 alter table leads enable row level security;

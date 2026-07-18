@@ -160,7 +160,8 @@ if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
 const urls = [
   `${BASE_URL}/index.html`,
-  `${BASE_URL}/kreator.html`
+  `${BASE_URL}/kreator.html`,
+  `${BASE_URL}/kalkulator/brutto-netto-niemcy.html`
 ];
 
 for (const [key, K] of Object.entries(KRAJE)) {

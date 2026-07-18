@@ -249,10 +249,12 @@ section > h2, .steps h2, .faq h2 { text-align: center; font-size: 2rem; margin-b
 .pricing { padding: 4.5rem clamp(1rem, 5vw, 4rem); background: var(--bg-soft); }
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 380px));
+  grid-template-columns: repeat(3, minmax(0, 340px));
   gap: 1.5rem;
   justify-content: center;
 }
+.price-card-pakiet { border: 2px solid #0ea5e9; }
+.price-flag-pakiet { background: #0ea5e9; }
 .price-card {
   background: #fff;
   border-radius: var(--radius);
@@ -282,6 +284,33 @@ section > h2, .steps h2, .faq h2 { text-align: center; font-size: 2rem; margin-b
 .price-card ul { list-style: none; flex: 1; display: flex; flex-direction: column; gap: .5rem; font-size: .95rem; }
 .price-card .muted { color: var(--ink-soft); }
 .price-card .btn { text-align: center; }
+
+/* ---------- Founder ---------- */
+.founder { padding: 4.5rem clamp(1rem, 5vw, 4rem); }
+.founder-box {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 2rem;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--bg-soft);
+}
+.founder-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent);
+  display: grid;
+  place-items: center;
+  font-size: 4rem;
+}
+.founder-box h2 { text-align: left; font-size: 1.5rem; margin-bottom: .8rem; }
+.founder-box p { color: var(--ink-soft); font-size: .95rem; margin-bottom: .8rem; }
 
 /* ---------- Lead magnet ---------- */
 .lead-magnet { padding: 4.5rem clamp(1rem, 5vw, 4rem); }
@@ -429,6 +458,8 @@ section > h2, .steps h2, .faq h2 { text-align: center; font-size: 2rem; margin-b
   .hero { grid-template-columns: 1fr; }
   .hero-visual { display: none; }
   .steps-grid, .templates-grid, .why-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .founder-box { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .founder-box h2 { text-align: center; }
   .countries-grid { grid-template-columns: repeat(2, 1fr); }
   .professions-grid { grid-template-columns: repeat(2, 1fr); }
   .lead-magnet-box { grid-template-columns: 1fr; }
