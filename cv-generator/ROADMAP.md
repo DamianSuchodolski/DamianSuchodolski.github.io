@@ -25,14 +25,11 @@ koszyk (nowe funkcje).
 *Kryterium ukończenia: obcy człowiek może zapłacić 19 zł i dostać PRO bez mojego udziału.*
 
 ### 1.1 Fundamenty prawne (RODO) — PRZED zbieraniem pierwszego e-maila
-- [ ] **Polityka prywatności** (administrator danych, cel, podstawa prawna,
-      odbiorcy: Supabase/Anthropic, prawa użytkownika) + podlinkowanie w stopce
-      i przy każdym formularzu e-mail
-- [ ] **Regulamin sprzedaży PRO**: (a) checkbox przy zakupie — zgoda na
-      natychmiastowe dostarczenie treści cyfrowej + utrata ustawowego prawa
-      odstąpienia (art. 38 pkt 13 ustawy o prawach konsumenta), (b) dobrowolna
-      gwarancja warunkowa: 14 dni na zwrot, O ILE funkcje PRO nie zostały
-      użyte (brak tłumaczenia AI / pobrania PDF bez stopki)
+- [x] **Polityka prywatności** — ✅ DRAFT gotowy (`polityka-prywatnosci.html`,
+      podlinkowana w stopce). ⚠️ Uzupełnij pola [oznaczone], zweryfikuj, usuń
+      baner „PROJEKT" i meta noindex
+- [x] **Regulamin** — ✅ DRAFT gotowy (`regulamin.html`: art. 38 pkt 13 +
+      gwarancja warunkowa 14 dni). ⚠️ Jak wyżej — uzupełnij i zweryfikuj
 - [ ] Rejestr czynności przetwarzania (prosty dokument wewnętrzny)
 - Decyzja: sprzedaż jako działalność (nierejestrowana do limitu / JDG) — sprawdzić
   próg i fakturowanie
@@ -40,25 +37,25 @@ koszyk (nowe funkcje).
 ### 1.2 Infrastruktura
 - [ ] Domena (decyzja: nazwa! `cvturbo.pl` to placeholder) + podmiana BASE_URL
       w build-skryptach i robots.txt, przegenerowanie SEO
-- [ ] Deploy na Hetzner: statyczne pliki (nginx) + ai-server (systemd) +
-      reverse proxy `/api/*` + certbot
-- [ ] Supabase: tabela `leads` (SQL w README), wpisanie kluczy do CVTURBO_CONFIG
-- [ ] Analityka: Plausible (lekka, bez cookie-bannera) lub GA4; zdarzenia:
-      wejście do kreatora, pobranie PDF, otwarcie modalu PRO, lead, zakup
+- [x] Pliki deployu — ✅ gotowe w `deploy/` (nginx conf + systemd unit +
+      instrukcja DEPLOY.md krok po kroku); wykonanie na serwerze: po domenie
+- [ ] Supabase: tabele `leads` + `pro_codes` (SQL w README), klucze do
+      CVTURBO_CONFIG (anon) i `/etc/cvturbo/ai.env` (service)
+- [x] Analityka — ✅ wpięta (`js/analytics.js`, Plausible bez cookie-bannera;
+      zdarzenia: Lead, PDFDownload, ProModalOpen, ProActivated). Aktywacja:
+      wpisz `plausibleDomain` w CVTURBO_CONFIG + załóż konto Plausible
 - [ ] Google Search Console + zgłoszenie sitemap; Bing Webmaster Tools
 
 ### 1.3 Płatności ⭐ NAJWAŻNIEJSZE
 - [ ] **Rekomendacja MVP: Stripe Payment Link** (najszybsze wdrożenie, obsługa
       BLIK/kart, faktury przez Stripe Tax opcjonalnie).
       Alternatywy PL: HotPay, Przelewy24 (niższe prowizje, więcej integracji).
-- [ ] Przepływ MVP: przycisk w modalu PRO → Payment Link → po płatności
-      strona `dziekujemy.html?kod=...` z kodem odblokowującym → użytkownik
-      wpisuje kod w kreatorze → flaga PRO + zapis kodu
-- [ ] Weryfikacja kodu: minimum — lista jednorazowych kodów w Supabase
-      (tabela `pro_codes`: code, email, used_at, `translated_at`,
-      `pdf_downloaded_at` — kolumny użycia zasilają procedurę zwrotów);
-      ai-server dostaje endpoint `/api/redeem` sprawdzający kod
-      (twardsza blokada niż localStorage)
+- [x] Przepływ MVP — ✅ okablowany: `dziekujemy.html?kod=&tier=` → auto-aktywacja
+      w kreatorze (`?kod=`), sekcja „Mam już kod" w modalu, przełącznik na linki
+      Stripe w CVTURBO_CONFIG (puste = dotychczasowe zbieranie e-maili)
+- [x] Weryfikacja kodu — ✅ endpoint `/api/redeem` w ai-serverze (Supabase
+      service key, kody jednorazowe, SQL `pro_codes` w README).
+      Zostaje: utworzyć tabelę, wygenerować kody, wkleić linki Stripe
 - [ ] E-mail po zakupie (potwierdzenie + kod) — na start ręcznie/Zapier,
       docelowo webhook Stripe → funkcja
 - [ ] Obsługa zwrotów: przy zgłoszeniu sprawdź użycie kodu w `pro_codes`
@@ -67,8 +64,9 @@ koszyk (nowe funkcje).
       lepszy niż chargeback (kara Stripe + ryzyko konta).
 
 ### 1.4 Lead magnet (obiecany na landingu!)
-- [ ] Napisać poradnik **„10 błędów, przez które CV ląduje w koszu"** (PDF,
-      ~8–12 stron, treść z bazy kraje.js/zawody.js — pół dnia pracy z AI)
+- [x] Poradnik **„10 błędów, przez które CV ląduje w koszu"** — ✅ gotowy
+      (`poradnik/10-bledow-cv.html`, wersja do druku/PDF, noindex — link
+      wysyłany mailem po zapisie)
 - [ ] Wysyłka: na start autoresponder (MailerLite free tier — do 1000 kontaktów)
       podpięty do leadów z Supabase
 

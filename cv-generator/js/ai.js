@@ -51,6 +51,11 @@
         });
     },
 
+    /** Aktywacja kodu PRO/PAKIET po zakupie. Zwraca {tier}. */
+    redeem: function (code) {
+      return post('/api/redeem', { code: code });
+    },
+
     /** List motywacyjny (PAKIET). Wysyła treść CV + dane oferty (bez kontaktu). */
     coverLetter: function (cv, job, targetLang, profession) {
       return post('/api/cover-letter', {

@@ -783,7 +783,10 @@
 
   /* ==================== Modale ==================== */
 
-  function openModal(sel) { $(sel).hidden = false; }
+  function openModal(sel) {
+    $(sel).hidden = false;
+    if (sel === '#proModal' && window.CVTrack) CVTrack('ProModalOpen');
+  }
   function closeModal(sel) { $(sel).hidden = true; }
 
   document.querySelectorAll('.modal-backdrop').forEach(function (bd) {
@@ -848,6 +851,13 @@
       source: selectedTier === 'pakiet' ? 'pakiet-intent' : 'pro-intent',
       consent: $('#proConsent').checked
     });
+    // Gdy linki Stripe są skonfigurowane — prowadzimy prosto do płatności
+    var cfg = window.CVTURBO_CONFIG || {};
+    var payLink = selectedTier === 'pakiet' ? cfg.stripePakietLink : cfg.stripeProLink;
+    if (payLink) {
+      location.href = payLink;
+      return;
+    }
     $('#proThanks').hidden = false;
     this.querySelector('button[type="submit"]').disabled = true;
   });
@@ -1142,6 +1152,40 @@
     selectTier(selectedTier === 'pakiet' ? 'pro' : 'pakiet');
   });
 
+  /* ==================== Aktywacja kodu (po zakupie) ==================== */
+
+  function activateTier(tier) {
+    try {
+      localStorage.setItem(tier === 'pakiet' ? PAKIET_KEY : PRO_KEY, '1');
+    } catch (e) {}
+    update();
+  }
+
+  function redeemCode(code) {
+    var status = $('#redeemStatus');
+    status.hidden = false;
+    status.textContent = '⏳ Sprawdzam kod…';
+    $('#redeemBtn').disabled = true;
+    CVAI.redeem(code)
+      .then(function (r) {
+        activateTier(r.tier);
+        if (window.CVTrack) CVTrack('ProActivated', { tier: r.tier });
+        status.textContent = '🎉 Aktywowano ' + (r.tier === 'pakiet'
+          ? 'Pakiet „Praca za granicą"' : 'CVTurbo PRO') + '! Wszystkie funkcje odblokowane.';
+        setTimeout(function () { closeModal('#proModal'); }, 1800);
+        $('#redeemBtn').disabled = false;
+      })
+      .catch(function (err) {
+        status.textContent = '❌ ' + err.message;
+        $('#redeemBtn').disabled = false;
+      });
+  }
+
+  $('#redeemBtn').addEventListener('click', function () {
+    var code = $('#redeemInput').value.trim();
+    if (code) redeemCode(code);
+  });
+
   /* ==================== Polecenia brygadowe ==================== */
 
   function myRefCode() {
@@ -1161,6 +1205,7 @@
   }
 
   window.addEventListener('afterprint', function () {
+    if (window.CVTrack) CVTrack('PDFDownload', { country: state.country });
     setTimeout(showShareToast, 400);
   });
   $('#shareClose').addEventListener('click', function () {
@@ -1229,6 +1274,15 @@
   }
   if (params.get('upgrade') === '1') {
     setTimeout(function () { openModal('#proModal'); }, 300);
+  }
+  var kodParam = params.get('kod');
+  if (kodParam) {
+    setTimeout(function () {
+      openModal('#proModal');
+      $('#redeemBox').open = true;
+      $('#redeemInput').value = kodParam;
+      redeemCode(kodParam);
+    }, 300);
   }
 
   /* ==================== Start ==================== */

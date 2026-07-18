@@ -32,7 +32,7 @@ const client = new Anthropic(); // klucz z ANTHROPIC_API_KEY
 
 /* ==================== Rate limit (per IP, per endpoint, na godzinę) ==================== */
 
-const RATE_LIMITS = { translate: 20, import: 10, 'cover-letter': 15 };
+const RATE_LIMITS = { translate: 20, import: 10, 'cover-letter': 15, redeem: 20 };
 const rateBuckets = new Map(); // "ip|endpoint" -> {count, resetAt}
 
 function rateLimited(ip, endpoint) {
@@ -279,6 +279,45 @@ async function handleImport(payload) {
   return { result: await callClaude(IMPORT_SYSTEM, content, IMPORT_SCHEMA) };
 }
 
+/**
+ * Aktywacja kodu PRO/PAKIET. Wymaga w env: SUPABASE_URL + SUPABASE_SERVICE_KEY
+ * (service_role — TYLKO na serwerze). Tabela pro_codes: patrz README.
+ */
+async function handleRedeem(payload) {
+  if (!payload || typeof payload.code !== 'string' || !/^[A-Za-z0-9-]{4,40}$/.test(payload.code)) {
+    throw Object.assign(new Error('Niepoprawny kod'), { status: 400 });
+  }
+  const sbUrl = process.env.SUPABASE_URL;
+  const sbKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!sbUrl || !sbKey) {
+    throw Object.assign(new Error('Aktywacja kodów nie jest jeszcze skonfigurowana na serwerze.'), { status: 501 });
+  }
+  const headers = {
+    apikey: sbKey,
+    Authorization: 'Bearer ' + sbKey,
+    'Content-Type': 'application/json'
+  };
+  const q = await fetch(sbUrl + '/rest/v1/pro_codes?code=eq.' + encodeURIComponent(payload.code) +
+    '&select=code,tier,used_at', { headers });
+  const rows = await q.json();
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw Object.assign(new Error('Nie znaleziono takiego kodu.'), { status: 404 });
+  }
+  if (rows[0].used_at) {
+    throw Object.assign(new Error('Ten kod został już użyty.'), { status: 409 });
+  }
+  const upd = await fetch(sbUrl + '/rest/v1/pro_codes?code=eq.' + encodeURIComponent(payload.code) +
+    '&used_at=is.null', {
+    method: 'PATCH', headers: Object.assign({ Prefer: 'return=representation' }, headers),
+    body: JSON.stringify({ used_at: new Date().toISOString() })
+  });
+  const updated = await upd.json();
+  if (!Array.isArray(updated) || updated.length === 0) {
+    throw Object.assign(new Error('Ten kod został już użyty.'), { status: 409 });
+  }
+  return { tier: rows[0].tier === 'pakiet' ? 'pakiet' : 'pro' };
+}
+
 async function handleCoverLetter(payload) {
   if (!payload || typeof payload.targetLang !== 'string' || !payload.cv) {
     throw Object.assign(new Error('Niepoprawna struktura żądania'), { status: 400 });
@@ -296,7 +335,8 @@ async function handleCoverLetter(payload) {
 const ROUTES = {
   translate: { handler: handleTranslate, maxBody: 100 * 1024 },
   import: { handler: handleImport, maxBody: 7 * 1024 * 1024 },
-  'cover-letter': { handler: handleCoverLetter, maxBody: 120 * 1024 }
+  'cover-letter': { handler: handleCoverLetter, maxBody: 120 * 1024 },
+  redeem: { handler: handleRedeem, maxBody: 2 * 1024 }
 };
 
 /* ==================== Serwer ==================== */

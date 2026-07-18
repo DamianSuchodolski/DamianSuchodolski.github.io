@@ -265,9 +265,18 @@
         <span>Zgadzam się na kontakt e-mail w sprawie zakupu CVTurbo PRO oraz informacji o produkcie.</span>
       </label>
     </form>
-    <p class="modal-note">Uruchamiamy płatności — zostaw e-mail, a wyślemy Ci link do zakupu
+    <p class="modal-note" id="proFallbackNote">Uruchamiamy płatności — zostaw e-mail, a wyślemy Ci link do zakupu
        i <strong>zagwarantujemy cenę startową 19 zł</strong> (docelowo 39 zł).</p>
     <p class="modal-note" id="proThanks" hidden>✅ Cena 19 zł zarezerwowana dla Ciebie! Link do płatności wyślemy na podany adres.</p>
+
+    <details class="redeem-box" id="redeemBox">
+      <summary>🔑 Mam już kod aktywacyjny</summary>
+      <div class="redeem-row">
+        <input type="text" id="redeemInput" placeholder="np. CVT-XXXX-XXXX" autocomplete="off">
+        <button type="button" class="btn btn-primary" id="redeemBtn">Aktywuj</button>
+      </div>
+      <p class="modal-note" id="redeemStatus" hidden></p>
+    </details>
   </div>
 </div>
 
@@ -330,6 +339,7 @@
 </div>
 
 <script src="js/leads.js"></script>
+<script src="js/analytics.js"></script>
 <script src="js/ai.js"></script>
 <script src="js/zawody.js"></script>
 <script src="js/kraje.js"></script>

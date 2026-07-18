@@ -16,9 +16,15 @@
 window.CVTURBO_CONFIG = {
   supabaseUrl: '',      // np. https://xxxx.supabase.co
   supabaseAnonKey: '',
-  // Serwer tłumaczeń AI (tools/ai-server.js). Lokalnie: http://localhost:4141,
-  // na produkcji: adres wdrożonego serwera (np. https://ai.twojadomena.pl).
-  aiEndpoint: 'http://localhost:4141'
+  // Serwer AI (tools/ai-server.js). Lokalnie: http://localhost:4141,
+  // na produkcji: '' (pusty = ta sama domena, przez proxy nginx /api/).
+  aiEndpoint: 'http://localhost:4141',
+  // Linki płatności Stripe (Payment Links). Puste = modal zbiera e-maile
+  // (intencje zakupu). Po wklejeniu linków przyciski kierują do płatności.
+  stripeProLink: '',
+  stripePakietLink: '',
+  // Analityka Plausible: wpisz domenę (np. 'twojadomena.pl'), pusta = wyłączona.
+  plausibleDomain: ''
 };
 
 // Zapamiętaj kod polecenia z URL (?ref=...) — kto przyprowadził tego użytkownika
@@ -44,6 +50,8 @@ window.CVLeads = {
       all.push(record);
       localStorage.setItem('cvturbo_leads', JSON.stringify(all));
     } catch (e) { /* brak localStorage — ignorujemy */ }
+
+    if (window.CVTrack) CVTrack('Lead', { source: record.source });
 
     const cfg = window.CVTURBO_CONFIG;
     if (cfg.supabaseUrl && cfg.supabaseAnonKey) {

@@ -188,6 +188,30 @@ create policy "anon insert only" on leads for insert to anon with check (true);
 -- celowo BRAK polityki select dla anon — leady czyta tylko service_role
 ```
 
+### Kody PRO/PAKIET (`pro_codes`) — aktywacja po zakupie
+
+```sql
+create table pro_codes (
+  code text primary key,
+  tier text not null check (tier in ('pro','pakiet')),
+  email text,
+  created_at timestamptz default now(),
+  used_at timestamptz,
+  translated_at timestamptz,      -- zasilają procedurę zwrotów (gwarancja
+  pdf_downloaded_at timestamptz   -- warunkowa: zwrot tylko gdy nieużyte)
+);
+alter table pro_codes enable row level security;
+-- BRAK polityk dla anon — tabelę obsługuje wyłącznie ai-server przez
+-- SUPABASE_SERVICE_KEY (endpoint /api/redeem).
+```
+
+Przepływ zakupu: Stripe Payment Link (linki w `CVTURBO_CONFIG`) → po płatności
+przekierowanie na `dziekujemy.html?kod=XXX&tier=pro|pakiet` → przycisk prowadzi
+do `kreator.html?kod=XXX` → automatyczna aktywacja przez `/api/redeem`
+(kod jednorazowy, oznaczany `used_at`). W modalu PRO jest też ręczna sekcja
+„🔑 Mam już kod". Kody generujesz sam (np. `CVT-` + losowe znaki) i wgrywasz
+do tabeli; w Stripe ustaw redirect po płatności na dziekujemy.html z kodem.
+
 ## Checklista przed deployem
 
 - [ ] Podmień `BASE_URL` w `tools/build-kraje.js` i `tools/build-zawody.js` + `robots.txt` (placeholder `cvturbo.pl`), przegeneruj strony SEO

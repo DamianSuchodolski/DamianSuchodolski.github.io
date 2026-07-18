@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dziękujemy za zakup! | CVTurbo</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<style>
+.thanks { max-width: 560px; margin: 0 auto; padding: 4rem clamp(1rem,4vw,2rem); text-align: center; }
+.thanks h1 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+.thanks p { color: var(--ink-soft); margin-bottom: 1rem; }
+.kod-box { background: var(--bg-soft); border: 2px dashed var(--accent); border-radius: 14px;
+  padding: 1.2rem; font-size: 1.6rem; font-weight: 800; letter-spacing: .1em;
+  margin: 1.5rem 0; user-select: all; }
+.steps-mini { text-align: left; background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.2rem 1.4rem; margin: 1.5rem 0; }
+.steps-mini li { color: var(--ink-soft); font-size: .92rem; margin-bottom: .5rem; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">CV<span>Turbo</span></a>
+</nav>
+<main class="thanks">
+  <h1>🎉 Dziękujemy za zakup!</h1>
+  <p id="tierInfo">Twój dostęp jest gotowy do aktywacji.</p>
+  <p>Twój kod aktywacyjny (wysłaliśmy go też e-mailem):</p>
+  <div class="kod-box" id="kodBox">— brak kodu w adresie —</div>
+  <ol class="steps-mini">
+    <li>1️⃣ Kliknij przycisk poniżej — kod aktywuje się automatycznie.</li>
+    <li>2️⃣ Zapisz kod na wypadek zmiany przeglądarki lub komputera.</li>
+    <li>3️⃣ Gotowe — funkcje premium są odblokowane w kreatorze.</li>
+  </ol>
+  <a id="activateBtn" class="btn btn-primary btn-lg" href="kreator.html">Aktywuj w kreatorze →</a>
+  <p style="margin-top:1.5rem;font-size:.85rem">Problem z aktywacją? Napisz: <strong>[E-MAIL]</strong></p>
+</main>
+<footer class="footer">
+  <p>© 2026 CVTurbo · <a href="regulamin.html">Regulamin</a> · <a href="polityka-prywatnosci.html">Polityka prywatności</a></p>
+</footer>
+<script>
+(function () {
+  var p = new URLSearchParams(location.search);
+  var kod = p.get('kod') || '';
+  var tier = p.get('tier') === 'pakiet' ? 'pakiet' : 'pro';
+  if (kod) {
+    document.getElementById('kodBox').textContent = kod;
+    document.getElementById('activateBtn').href =
+      'kreator.html?kod=' + encodeURIComponent(kod) + '&tier=' + tier;
+  }
+  document.getElementById('tierInfo').textContent = tier === 'pakiet'
+    ? 'Pakiet „Praca za granicą": wszystkie szablony, Tłumacz AI i listy motywacyjne.'
+    : 'CVTurbo PRO: wszystkie szablony, Tłumacz AI, dokument bez stopki.';
+})();
+</script>
+</body>
+</html>

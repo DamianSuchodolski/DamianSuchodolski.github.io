@@ -271,6 +271,12 @@ textarea { resize: vertical; }
 }
 .pakiet-hint.pakiet-selected { background: #dbeafe; border-style: solid; }
 
+/* ---------- Aktywacja kodu ---------- */
+.redeem-box { margin-top: 1rem; font-size: .8rem; }
+.redeem-box summary { cursor: pointer; color: var(--ink-soft); font-weight: 600; }
+.redeem-row { display: flex; gap: .5rem; margin-top: .6rem; }
+.redeem-row input { flex: 1; text-transform: uppercase; letter-spacing: .05em; }
+
 /* ---------- Toast poleceń ---------- */
 .share-toast {
   position: fixed;
